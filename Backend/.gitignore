@@ -1,0 +1,85 @@
+# ===================================================================
+# Created by Gemini for a Maven Spring Boot Project
+# ===================================================================
+
+### Maven ###
+# This is the directory where Maven builds your project.
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+build.log
+.mvn/timing.properties
+# Ignore the maven wrapper jar file to avoid committing binaries.
+.mvn/wrapper/maven-wrapper.jar
+
+
+### IDE Configuration ###
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.sts4-cache/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+.nb-gradle/
+
+# Visual Studio Code
+.vscode/
+
+
+### Build & Log Files ###
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+
+# Packaged archives
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Hotspot Virtual Machine error logs
+hs_err_pid*
+
+
+### Operating System Files ###
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+
+### Sensitive Configuration ###
+# Ignore local property files that may contain secrets or passwords.
+# It's a best practice to manage secrets using environment variables or a vault.
+application-local.properties
+application-local.yml
+.env
+
+
+### Other ###
+# Spring Boot DevTools
+.spring-boot-devtools.properties
