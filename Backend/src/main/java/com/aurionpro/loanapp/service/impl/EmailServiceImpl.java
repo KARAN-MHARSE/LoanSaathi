@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
 //		helper.setText(emailDto.getBody());
 		
 		String htmlContent = "<p>"+emailDto.getBody() +"</p>"+
-							"<img src='" + emailDto.getImage()+"'/>";
+							"<img src='" + emailDto.getImage()+"' alt='image not found'/>";
 		helper.setText(htmlContent,true);
 		
 		javaMailSender.send(mimeMessage);

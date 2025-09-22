@@ -1,5 +1,7 @@
 package com.aurionpro.loanapp.dto;
 
+import java.time.LocalDateTime;
+
 import org.springframework.scheduling.support.SimpleTriggerContext;
 
 
@@ -9,6 +11,6 @@ import lombok.Data;
 public class RegisterResponseDto {
 	private Long id;
 	private String username;
-	private String rollName;
+	private LocalDateTime createdAt;
 
 }
