@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.loanapplication;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

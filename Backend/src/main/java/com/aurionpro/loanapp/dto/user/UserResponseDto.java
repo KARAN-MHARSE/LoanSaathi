@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.user;
 
 import lombok.Data;
 

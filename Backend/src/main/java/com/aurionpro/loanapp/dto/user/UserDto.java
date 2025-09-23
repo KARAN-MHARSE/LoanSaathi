@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.user;
 import com.aurionpro.loanapp.property.RoleType;
 import lombok.Data;
 import java.time.LocalDate;

@@ -1,5 +1,6 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.loanapplication;
 
+import com.aurionpro.loanapp.dto.dashboard.document.DocumentResponseDto;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -20,5 +21,5 @@ public class LoanApplicationResponseDto {
     private String customerName;
     private Long loanSchemeId;
     private String loanSchemeName;
-    private List<DocumentDto> documents;
+    private List<DocumentResponseDto> documents;
 }

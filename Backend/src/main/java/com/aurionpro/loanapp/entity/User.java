@@ -83,7 +83,7 @@ public class User implements UserDetails {
 	private List<Loan> loans;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<UserBankAccount> bankAccounts;
+	private List<BankAccount> bankAccounts;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aurionpro.loanapp.dto.LoginRequestDto;
-import com.aurionpro.loanapp.dto.LoginResponseDto;
-import com.aurionpro.loanapp.dto.RegisterRequestDto;
-import com.aurionpro.loanapp.dto.RegisterResponseDto;
+import com.aurionpro.loanapp.dto.auth.LoginRequestDto;
+import com.aurionpro.loanapp.dto.auth.LoginResponseDto;
+import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
+import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
 import com.aurionpro.loanapp.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
