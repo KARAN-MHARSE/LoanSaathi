@@ -55,6 +55,10 @@ public class LoanApplication {
 	@JoinColumn(name = "customer_id")
 	private User user;
 	
+//	@ManyToOne
+//	@Column(name = "assigned_officer_id")
+//	private User assignedOfficer;
+	
 	@ManyToOne
 	@JoinColumn(name="loan_scheme_id")
 	private LoanScheme loanScheme;

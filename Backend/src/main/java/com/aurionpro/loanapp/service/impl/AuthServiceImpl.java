@@ -8,10 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.aurionpro.loanapp.dto.LoginRequestDto;
-import com.aurionpro.loanapp.dto.LoginResponseDto;
-import com.aurionpro.loanapp.dto.RegisterRequestDto;
-import com.aurionpro.loanapp.dto.RegisterResponseDto;
+import com.aurionpro.loanapp.dto.auth.ForgotPasswordRequestDto;
+import com.aurionpro.loanapp.dto.auth.LoginRequestDto;
+import com.aurionpro.loanapp.dto.auth.LoginResponseDto;
+import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
+import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
 import com.aurionpro.loanapp.entity.Role;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.repository.RoleRepository;
@@ -54,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public LoginResponseDto login(LoginRequestDto requestDto) {
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword())
+				new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword())
 				);
 		String token = jwtService.generateToken(authentication);
 		
@@ -64,6 +65,16 @@ public class AuthServiceImpl implements AuthService {
 		
 		return response;
 
+	}
+	@Override
+	public void forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void resetPassword(AuthService resetPasswordRequestDto) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

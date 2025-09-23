@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

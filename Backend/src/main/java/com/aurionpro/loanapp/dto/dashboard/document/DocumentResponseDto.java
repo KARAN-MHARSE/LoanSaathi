@@ -1,11 +1,11 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.dashboard.document;
 
 import com.aurionpro.loanapp.property.DocumentType;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class DocumentDto {
+public class DocumentResponseDto {
     private Long id;
     private DocumentType type;
     private String name;
