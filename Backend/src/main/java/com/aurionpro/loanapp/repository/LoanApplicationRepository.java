@@ -12,7 +12,7 @@ import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long> {
-    List<LoanApplication> findByUser(User applicant);
+    List<LoanApplication> findByCustomer(User applicant);
 
 //    List<LoanApplication> findByAssignedOfficer(User officer);
     

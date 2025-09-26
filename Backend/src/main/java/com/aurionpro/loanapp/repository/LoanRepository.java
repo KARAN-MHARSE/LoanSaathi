@@ -12,6 +12,6 @@ import com.aurionpro.loanapp.property.LoanStatus;
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 	Optional<Loan> findById(Long loanId);
 
-    List<Loan> findByUserId(User borrower);
+    List<Loan> findByCustomerId(Long customerId);
     List<Loan> findByStatus(LoanStatus loanStatus);
 }

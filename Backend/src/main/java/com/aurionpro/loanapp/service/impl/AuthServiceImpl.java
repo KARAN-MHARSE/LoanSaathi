@@ -13,6 +13,7 @@ import com.aurionpro.loanapp.dto.auth.LoginRequestDto;
 import com.aurionpro.loanapp.dto.auth.LoginResponseDto;
 import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
 import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
+import com.aurionpro.loanapp.entity.Customer;
 import com.aurionpro.loanapp.entity.Role;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.repository.RoleRepository;
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
 				.orElseThrow(()-> new RuntimeException("Role is not exist"));
 		
 		role.getUsers().add(user);
-		user.setRole(role);
+		user.setRole(role);		
 		
 		User savedUser = userRepository.save(user);
 		return mapper.map(savedUser, RegisterResponseDto.class);

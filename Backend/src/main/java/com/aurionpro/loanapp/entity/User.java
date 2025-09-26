@@ -50,16 +50,16 @@ public class User implements UserDetails {
 
 	@Column(nullable = false)
 	private String password;
-	
+
 	private String profileUrl;
 
 	@Column(nullable = false, unique = true, length = 15)
 	private String phoneNumber;
 
 	private LocalDate dateOfBirth;
-	
-	@Column(name="is_deleted", nullable = false)
-	private boolean isDeleted=false;
+
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted = false;
 
 	@CreationTimestamp
 	@Column(nullable = false, updatable = false)
@@ -76,14 +76,11 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Address address;
 
-	@OneToMany(mappedBy = "user")
-	private List<LoanApplication> loanApplications;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Customer customerProfile;
 
-	@OneToMany(mappedBy = "user")
-	private List<Loan> loans;
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<BankAccount> bankAccounts;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Officer officerProfile;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

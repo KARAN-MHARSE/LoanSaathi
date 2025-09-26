@@ -32,5 +32,16 @@ public class GlobalExceptionHandler {
 		errorResponse.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<ErrorResponseDto>(errorResponse,HttpStatus.UNAUTHORIZED);
     }
+	
+	@ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(IllegalStateException exception) {
+		ErrorResponseDto errorResponse = new ErrorResponseDto();
+		errorResponse.setMessage(exception.getMessage());
+		errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		errorResponse.setSuccess(false);
+		errorResponse.setTimestamp(LocalDateTime.now());
+		return new ResponseEntity<ErrorResponseDto>(errorResponse,HttpStatus.UNAUTHORIZED);
+    }
+	
 
 }
