@@ -9,11 +9,12 @@ import com.aurionpro.loanapp.dto.emi.EmiCalculationRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationResponseDto;
 
 public interface ILoanService {
-    List<LoanDto> getLoansForCurrentUser();
-    LoanDto getLoanDetails(String loanId);
-    byte[] generateLoanStatement(String loanId); // Returns PDF bytes
-    void processRepayment(String loanId, RepaymentRequestDto repaymentRequestDto);
-    List<InstallmentDto> getRepaymentSchedule(String loanId);
-    void requestLoanClosure(String loanId);
-    EmiCalculationResponseDto calculateEMI(EmiCalculationRequestDto calculationRequestDto);
+	
+//    List<LoanDto> getLoansForCurrentUser();
+//    LoanDto getLoanDetails(String loanId);
+//    byte[] generateLoanStatement(String loanId); // Returns PDF bytes
+//    void processRepayment(String loanId, RepaymentRequestDto repaymentRequestDto);
+//    List<InstallmentDto> getRepaymentSchedule(String loanId);
+//    void requestLoanClosure(String loanId);
+//    EmiCalculationResponseDto calculateEMI(EmiCalculationRequestDto calculationRequestDto);
 }

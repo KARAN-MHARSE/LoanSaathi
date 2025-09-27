@@ -74,6 +74,6 @@ public class LoanApplication {
 	@JoinColumn(name="loan_scheme_id")
 	private LoanScheme loanScheme;
 
-	@OneToMany(mappedBy = "loanApplication", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "loanApplication", cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Document> documents;
 }
