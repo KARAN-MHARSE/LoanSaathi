@@ -3,12 +3,14 @@ package com.aurionpro.loanapp.service.impl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.ranges.DocumentRange;
 
 import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
+import com.aurionpro.loanapp.dto.EmailDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.entity.Customer;
@@ -24,6 +26,7 @@ import com.aurionpro.loanapp.repository.DocumentRepository;
 import com.aurionpro.loanapp.repository.LoanApplicationRepository;
 import com.aurionpro.loanapp.repository.LoanSchemeRepository;
 import com.aurionpro.loanapp.repository.UserRepository;
+import com.aurionpro.loanapp.service.EmailService;
 import com.aurionpro.loanapp.service.ILoanApplicationService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -40,6 +43,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	private final LoanApplicationRepository loanApplicationRepository;
 	private final DocumentRepository documentRepository;
 	private final Cloudinary cloudinary;
+	private final EmailService emailService;
 	private final ModelMapper mapper;
 
 	@Override
@@ -65,6 +69,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 			throw new RuntimeException("Not eligible");
 
 		loanApplication.setApplicationStatus(LoanApplicationStatus.NOT_APPLIED_YET);
+		loanApplication.setApplicationId(UUID.randomUUID().toString());
 		
 		loanApplication.setCustomer(customer);
 		loanApplication.setLoanScheme(loanScheme);
@@ -89,6 +94,19 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 			
 
 		loanApplication.setApplicationStatus(LoanApplicationStatus.PENDING);
+		
+		EmailDto emailDto = new EmailDto();
+		emailDto.setTo(user.getEmail());
+		emailDto.setSubject("Loan Application Submitted Successfully");
+		String body = "Dear " + user.getFirstName()+" "+user.getLastName() + ",\n\n"
+                + "Your loan application (ID: " + loanApplication.getApplicationId() + ") has been submitted successfully.\n"
+                + "Our team will review it and get back to you shortly.\n\n"
+                + "Thank you for choosing LoanSaathi.\n\n"
+                + "Regards,\nLoanSaathi Team";
+		
+		emailDto.setBody(body);
+		
+		emailService.sendEmailWithoutImage(emailDto);
 		
 //		Assigned the loan officer
 
