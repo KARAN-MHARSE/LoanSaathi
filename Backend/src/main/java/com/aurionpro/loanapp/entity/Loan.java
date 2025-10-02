@@ -1,6 +1,12 @@
 package com.aurionpro.loanapp.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -8,6 +14,10 @@ import java.util.UUID;
 import com.aurionpro.loanapp.property.LoanStatus;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

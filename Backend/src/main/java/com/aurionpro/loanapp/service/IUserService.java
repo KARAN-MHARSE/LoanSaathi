@@ -6,6 +6,7 @@ import com.aurionpro.loanapp.dto.user.UserDto;
 import com.aurionpro.loanapp.property.UserStatus;
 
 public interface IUserService {
+	
     UserDto getCurrentUserProfile();
     UserDto updateUserProfile(IUserService updateUserDto);    
     // Admin methods

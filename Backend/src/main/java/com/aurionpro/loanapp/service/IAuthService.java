@@ -1,17 +1,20 @@
 
 package com.aurionpro.loanapp.service;
 
+import com.aurionpro.loanapp.dto.OtpDto;
 import com.aurionpro.loanapp.dto.auth.ForgotPasswordRequestDto;
 import com.aurionpro.loanapp.dto.auth.LoginRequestDto;
 import com.aurionpro.loanapp.dto.auth.LoginResponseDto;
 import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
 import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
+import com.aurionpro.loanapp.dto.auth.ResetPasswordRequestDto;
 
-public interface AuthService {
+public interface IAuthService {
 
 	RegisterResponseDto register(RegisterRequestDto registerDto);
 	LoginResponseDto login(LoginRequestDto requestDto);
-	void forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
-    void resetPassword(AuthService resetPasswordRequestDto);
-//    LoginResponseDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
+	boolean forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
+	void sendForgetPasswordOtp(String email);
+    void resetPassword(ResetPasswordRequestDto resetPasswordRequestDto);
+    void logout(String email);
 }

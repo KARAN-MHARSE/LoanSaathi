@@ -113,6 +113,21 @@
 			<version>1.33.0</version> <!-- check for latest version -->
 		</dependency>
 
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>3.5.4</version>
+		</dependency>
+
+		<!--
+		https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 	</dependencies>
 

@@ -3,10 +3,10 @@ package com.aurionpro.loanapp.service;
 import java.util.List;
 
 import com.aurionpro.loanapp.dto.InstallmentDto;
-import com.aurionpro.loanapp.dto.LoanDto;
 import com.aurionpro.loanapp.dto.RepaymentRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationResponseDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanDto;
 
 public interface ILoanService {
 	

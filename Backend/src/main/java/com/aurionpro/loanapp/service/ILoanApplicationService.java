@@ -10,6 +10,7 @@ import com.aurionpro.loanapp.dto.dashboard.document.DocumentRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 
@@ -17,6 +18,8 @@ public interface ILoanApplicationService {
     LoanApplicationResponseDto applyForLoan(LoanApplicationRequestDto applicationRequestDto, String customerEmail);
     LoanApplicationResponseDto submitLoanApplication(Long applicationId,String email);
     LoanApplicationResponseDto uploadDocuments(Long applicationId, List<DocumentUploadRequestDto> documents) throws IOException;
+	public LoanApplicationResponseDto updateApplicationStatus(LoanApplicationStatusUpdateRequestDto request);
+
 
 //    List<LoanApplicationDto> getApplicationsForCurrentUser(User user);
 //    LoanApplicationDto getApplicationStatus(String applicationId);

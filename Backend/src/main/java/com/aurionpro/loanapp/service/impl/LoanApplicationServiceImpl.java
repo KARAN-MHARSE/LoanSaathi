@@ -1,6 +1,7 @@
 package com.aurionpro.loanapp.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -13,18 +14,24 @@ import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.EmailDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
 import com.aurionpro.loanapp.entity.Customer;
 import com.aurionpro.loanapp.entity.Document;
+import com.aurionpro.loanapp.entity.Loan;
 import com.aurionpro.loanapp.entity.LoanApplication;
 import com.aurionpro.loanapp.entity.LoanScheme;
+import com.aurionpro.loanapp.entity.Officer;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.exception.AccessDeniedException;
 import com.aurionpro.loanapp.exception.ResourceNotFoundException;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
+import com.aurionpro.loanapp.property.LoanStatus;
 import com.aurionpro.loanapp.repository.CustomerRepository;
 import com.aurionpro.loanapp.repository.DocumentRepository;
 import com.aurionpro.loanapp.repository.LoanApplicationRepository;
+import com.aurionpro.loanapp.repository.LoanRepository;
 import com.aurionpro.loanapp.repository.LoanSchemeRepository;
+import com.aurionpro.loanapp.repository.OfficerRepository;
 import com.aurionpro.loanapp.repository.UserRepository;
 import com.aurionpro.loanapp.service.EmailService;
 import com.aurionpro.loanapp.service.ILoanApplicationService;
@@ -41,7 +48,9 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	private final LoanSchemeRepository loanSchemeRepository;
 	private final CustomerRepository customerRepository;
 	private final LoanApplicationRepository loanApplicationRepository;
+	private final OfficerRepository officerRepository;
 	private final DocumentRepository documentRepository;
+	private final LoanRepository loanRepository;
 	private final Cloudinary cloudinary;
 	private final EmailService emailService;
 	private final ModelMapper mapper;
@@ -59,6 +68,11 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		LoanScheme loanScheme = loanSchemeRepository.findById(applicationRequestDto.getLoanSchemeId())
 				.orElseThrow(() -> new ResourceNotFoundException(
 						"Loan Scheme not found with id " + applicationRequestDto.getLoanSchemeId()));
+		
+//		LoanApplication loanApplication = loanApplicationRepository.findById(applicationRequestDto.getLoanSchemeId())
+//				.orElse(null);
+//		
+//		if(loanApplication != null && loanApplication.getApplicationStatus().equals(LoanApplicationStatus.))
 
 		LoanApplication loanApplication = mapper.map(applicationRequestDto, LoanApplication.class);
 
@@ -149,6 +163,44 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		return mapper.map(loanApplication, LoanApplicationResponseDto.class);
 
 	}
+	
+	@Override
+	public LoanApplicationResponseDto updateApplicationStatus(LoanApplicationStatusUpdateRequestDto request) {
+		LoanApplication loanApplication = loanApplicationRepository.findById(request.getApplicationId()).orElseThrow(
+				() -> new ResourceNotFoundException("Application not found with id " + request.getApplicationId()));
+
+		Officer officer = officerRepository.findById(request.getOfficerId()).orElseThrow(
+				() -> new ResourceNotFoundException("Officer not found with id " + request.getOfficerId()));
+
+		loanApplication.setApplicationStatus(request.getNewLoanApplicationStatus());
+		loanApplication.setAssignedOfficer(officer);
+
+		LoanApplication updatedApplication = loanApplicationRepository.save(loanApplication);
+
+		if (request.getNewLoanApplicationStatus().equals(LoanApplicationStatus.APPROVED)) {
+			createLoanFromApplication(updatedApplication);
+		}
+		return mapper.map(updatedApplication, LoanApplicationResponseDto.class);
+	}
+
+	private void createLoanFromApplication(LoanApplication application) {
+		Loan newLoan = new Loan();
+
+		newLoan.setLoanNumber(UUID.randomUUID()); // Generate a unique public ID
+		newLoan.setCustomer(application.getCustomer());
+		newLoan.setLoanScheme(application.getLoanScheme());
+		newLoan.setLoanAmount(application.getRequiredAmount());
+		newLoan.setInterestRate(application.getLoanScheme().getInterestRate());
+		newLoan.setTenureMonths(application.getTenure());
+		newLoan.setStartDate(LocalDateTime.now());
+		newLoan.setEndDate(LocalDateTime.now().plusMonths(application.getTenure()));
+		newLoan.setStatus(LoanStatus.ACTIVE);
+		newLoan.setCreatedAt(LocalDateTime.now());
+		
+		loanRepository.save(newLoan);
+
+	}
+
 
 	private boolean isEligible(LoanApplicationRequestDto applicationRequestDto) {
 		// TODO Auto-generated method stub
