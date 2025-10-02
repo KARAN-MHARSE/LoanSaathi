@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,14 +19,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Table(name="loan_applications")
+@ToString(exclude = {"customer", "loanOfficer", "documents"})
+@Getter
+@Setter
+@NoArgsConstructor
 public class LoanApplication {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String applicationId;
 
 	@Column(nullable = false)
 	private BigDecimal requiredAmount;
@@ -50,19 +62,21 @@ public class LoanApplication {
 	
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
+	
+//	Relations
 
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
-	private User user;
+	private Customer customer;
 	
-//	@ManyToOne
-//	@Column(name = "assigned_officer_id")
-//	private User assignedOfficer;
+	@ManyToOne
+	@JoinColumn(name = "assigned_officer_id")
+	private Officer assignedOfficer;
 	
 	@ManyToOne
 	@JoinColumn(name="loan_scheme_id")
 	private LoanScheme loanScheme;
 
-	@OneToMany(mappedBy = "loanApplication", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "loanApplication", cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Document> documents;
 }

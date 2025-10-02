@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto.auth;
+package com.aurionpro.loanapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ForgotPasswordRequestDto {
+public class OtpDto {
+	public String code;
 	private String email;
-	private String otp;
-	private String newPassword;
+	private long createdAt;
 }
