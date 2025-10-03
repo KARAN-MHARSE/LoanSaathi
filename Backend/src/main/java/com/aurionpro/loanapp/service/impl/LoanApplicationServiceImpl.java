@@ -14,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.ranges.DocumentRange;
 
-import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.EmailDto;
+import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;

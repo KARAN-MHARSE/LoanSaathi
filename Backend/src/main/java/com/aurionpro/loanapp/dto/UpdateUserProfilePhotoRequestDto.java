@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UpdateUserProfileRequestDto {
+public class UpdateUserProfilePhotoRequestDto {
     @NotNull(message = "Profile image must not be null")
 	private MultipartFile profileImage;
 

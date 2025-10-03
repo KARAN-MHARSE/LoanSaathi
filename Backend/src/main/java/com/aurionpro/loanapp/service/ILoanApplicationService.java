@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.dashboard.document.DocumentRequestDto;
+import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
