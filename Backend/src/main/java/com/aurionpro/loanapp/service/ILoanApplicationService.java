@@ -11,6 +11,7 @@ import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
+import com.aurionpro.loanapp.dto.page.PageResponseDto;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 
@@ -18,14 +19,14 @@ public interface ILoanApplicationService {
     LoanApplicationResponseDto applyForLoan(LoanApplicationRequestDto applicationRequestDto, String customerEmail);
     LoanApplicationResponseDto submitLoanApplication(Long applicationId,String email);
     LoanApplicationResponseDto uploadDocuments(Long applicationId, List<DocumentUploadRequestDto> documents) throws IOException;
-	public LoanApplicationResponseDto updateApplicationStatus(LoanApplicationStatusUpdateRequestDto request);
+	public LoanApplicationResponseDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateRequestDto request);
 
 
 //    List<LoanApplicationDto> getApplicationsForCurrentUser(User user);
 //    LoanApplicationDto getApplicationStatus(String applicationId);
 
 //    Officer (User from authentication)
-//    List<LoanApplicationDto> getAssignedApplications(User user);
+	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize);
 //    void approveApplication(String applicationId);
 //    void rejectApplication(String applicationId, LoanApplicationStatus applicationStatus);
 //    void requestAdditionalDocuments(String applicationId, DocumentRequestDto documentRequestDto);
