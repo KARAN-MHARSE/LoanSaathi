@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import com.aurionpro.loanapp.property.PaymentStatus;
@@ -40,6 +41,9 @@ public class LoanInstallment {
     private LocalDateTime paymentDate;
     
     private BigDecimal penaltyAmount;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

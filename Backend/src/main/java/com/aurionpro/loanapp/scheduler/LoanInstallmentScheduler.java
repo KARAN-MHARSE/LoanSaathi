@@ -23,35 +23,44 @@ import lombok.RequiredArgsConstructor;
 public class LoanInstallmentScheduler {
 	private final LoanRepository loanRepository;
 	private final LoanInstallmentRepository installmentRepository;
-	
-    @Scheduled(cron = "0 0 0 20 * ?")
-    @Transactional
-    public void generateMonthlyInstallment() {
-    	List<Loan> activeLoans = loanRepository.findAllByStatus(LoanStatus.ACTIVE);
-    	
-    	for(Loan loan : activeLoans) {
-    		LocalDateTime nextDueDate = getNextInstallmentDate(loan);
-    		
-    		boolean exists = installmentRepository.existsByLoanAndDueDate(loan, nextDueDate);
-    		
-    		if(!exists) {
-    			LoanInstallment installment = new LoanInstallment();
-    			installment.setLoan(loan);
-    			installment.setAmount(loan.getEmiAmount());
-    			installment.setDueDate(nextDueDate);
-    			installment.setStatus(PaymentStatus.PENDING);
-    			installment.setPenaltyAmount(BigDecimal.ZERO);
-    			
-    			installmentRepository.save(installment);
-    		}
-    	}
-    }
-    
-    private LocalDateTime getNextInstallmentDate(Loan loan) {
-    	LocalDateTime lastDueDate = installmentRepository.findLastDueDateByLoan(loan)
-                .orElse(loan.getStartDate().minusMonths(1)); 
-    	
-    	return lastDueDate.plusMonths(1);
-    	
-    }
+
+	@Scheduled(cron = "0 0 0 20 * ?")
+	@Transactional
+	public void generateMonthlyInstallment() {
+		List<Loan> activeLoans = loanRepository.findAllByStatus(LoanStatus.ACTIVE);
+
+		for (Loan loan : activeLoans) {
+			LocalDateTime nextDueDate = getNextInstallmentDate(loan);
+
+			if (nextDueDate.isAfter(loan.getCreatedAt().plusMonths(loan.getTenureMonths()))) {
+				boolean exists = installmentRepository.existsByLoanAndDueDate(loan, nextDueDate);
+
+                if (!exists && loan.getInstallments().size() < loan.getTenureMonths()) {
+					LoanInstallment installment = new LoanInstallment();
+					installment.setLoan(loan);
+					installment.setAmount(loan.getEmiAmount());
+					installment.setDueDate(nextDueDate);
+					installment.setStatus(PaymentStatus.PENDING);
+					installment.setPenaltyAmount(BigDecimal.ZERO);
+
+					installmentRepository.save(installment);
+				}
+
+			}
+
+		}
+	}
+
+	private LocalDateTime getNextInstallmentDate(Loan loan) {
+		LocalDateTime lastDueDate = installmentRepository.findLastDueDateByLoan(loan)
+				.orElse(loan.getStartDate().minusMonths(1));
+		
+        LocalDate nextMonth = lastDueDate.toLocalDate().plusMonths(1);
+        
+        LocalDate dueDate = LocalDate.of(nextMonth.getYear(), nextMonth.getMonth(), 2);
+
+
+		return dueDate.atStartOfDay();
+
+	}
 }
