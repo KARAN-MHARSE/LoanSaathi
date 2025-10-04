@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.jsf.FacesContextUtils;
 
@@ -45,6 +47,6 @@ public class LoanInstallment {
     private Loan loan;
     
     @OneToMany(mappedBy = "installment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Penalty> penalties;
+    private List<Penalty> penalties = new ArrayList<>();
 
 }
