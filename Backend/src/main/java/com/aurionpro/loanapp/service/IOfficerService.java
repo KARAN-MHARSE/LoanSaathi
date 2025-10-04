@@ -1,6 +1,8 @@
 package com.aurionpro.loanapp.service;
 
-public class IOfficerService {
-	
+import com.aurionpro.loanapp.dto.officer.OfficerDashboardDto;
+
+public interface IOfficerService {	
+    OfficerDashboardDto getOfficerDashboard(String officerEmail);
 
 }

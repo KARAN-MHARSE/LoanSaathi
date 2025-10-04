@@ -1,7 +1,6 @@
 package com.aurionpro.loanapp.controller;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
+import com.aurionpro.loanapp.dto.officer.OfficerDashboardDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
-import com.aurionpro.loanapp.entity.LoanApplication;
 import com.aurionpro.loanapp.service.ILoanApplicationService;
+import com.aurionpro.loanapp.service.IOfficerService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OfficerController {
 	private final ILoanApplicationService loanApplicationService;
+    private final IOfficerService officerService;
+
 
 	@PutMapping("/applications")
 	public ResponseEntity<LoanApplicationResponseDto> updateLoanApplicationStatus(Principal principal,
@@ -44,4 +46,11 @@ public class OfficerController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/dashboard")
+    public ResponseEntity<OfficerDashboardDto> getDashboard(Principal principal) {
+        String officerEmail = principal.getName(); // get logged-in user's email
+        OfficerDashboardDto dashboard = officerService.getOfficerDashboard(officerEmail);
+        return ResponseEntity.ok(dashboard);
+    }
 }

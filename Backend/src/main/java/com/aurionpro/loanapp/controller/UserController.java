@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aurionpro.loanapp.dto.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
+import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfileRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
 import com.aurionpro.loanapp.service.IUserService;

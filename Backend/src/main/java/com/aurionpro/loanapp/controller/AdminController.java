@@ -20,15 +20,5 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
-	
-	 private final ILoanSchemeService loanSchemeService; // Or a new AdminService
-
-	    @PostMapping("/loan-schemes")
-	    @PreAuthorize("hasRole('ADMIN')")
-	    public ResponseEntity<LoanSchemeResponseDto> createLoanScheme(
-	            @Valid @RequestBody LoanSchemeRequestDto request) {
-	    	LoanSchemeResponseDto newScheme = loanSchemeService.createLoanScheme(request);
-	        return new ResponseEntity<>(newScheme, HttpStatus.CREATED);
-	    }
 
 }

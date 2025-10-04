@@ -2,8 +2,8 @@ package com.aurionpro.loanapp.service;
 
 import java.util.List;
 
-import com.aurionpro.loanapp.dto.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
+import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfileRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
 import com.aurionpro.loanapp.property.UserStatus;

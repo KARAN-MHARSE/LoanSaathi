@@ -17,4 +17,7 @@ public interface LoanSchemeRepository extends JpaRepository<LoanScheme, Long> {
 
 	Optional<LoanScheme> findById(Long id);
 	List<LoanScheme> findAllByLoanType(LoanType loanType);
+	
+    Page<LoanScheme> findAllByIsActiveTrue(Pageable pageable);
+
 }

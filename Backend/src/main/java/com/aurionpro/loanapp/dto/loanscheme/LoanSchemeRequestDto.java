@@ -42,4 +42,6 @@ public class LoanSchemeRequestDto {
 
     @Positive(message = "Maximum tenure must be positive")
     private int maxTenureMonths;
+    
+    private boolean isActive;
 }

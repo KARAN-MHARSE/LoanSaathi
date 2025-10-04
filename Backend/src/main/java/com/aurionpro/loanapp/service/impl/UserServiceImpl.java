@@ -6,8 +6,8 @@ import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.aurionpro.loanapp.dto.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
+import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.exception.ResourceNotFoundException;

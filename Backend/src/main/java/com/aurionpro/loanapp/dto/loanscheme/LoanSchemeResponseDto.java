@@ -23,5 +23,7 @@ public class LoanSchemeResponseDto {
     private String description;
     private int minTenureMonths;
     private int maxTenureMonths;
+    private boolean isActive;
     private LocalDateTime createdAt;
+    
 }
