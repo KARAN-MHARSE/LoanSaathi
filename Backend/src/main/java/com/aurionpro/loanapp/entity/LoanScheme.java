@@ -59,6 +59,9 @@ public class LoanScheme {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean isActive;
 
     
 //    Relations

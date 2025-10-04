@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
+import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.property.DocumentType;

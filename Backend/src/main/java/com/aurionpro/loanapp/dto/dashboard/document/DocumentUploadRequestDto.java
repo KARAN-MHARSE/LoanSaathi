@@ -1,4 +1,4 @@
-package com.aurionpro.loanapp.dto;
+package com.aurionpro.loanapp.dto.dashboard.document;
 
 import org.springframework.web.multipart.MultipartFile;
 

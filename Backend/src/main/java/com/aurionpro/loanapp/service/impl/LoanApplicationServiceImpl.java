@@ -1,20 +1,26 @@
 package com.aurionpro.loanapp.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ranges.DocumentRange;
 
-import com.aurionpro.loanapp.dto.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.EmailDto;
+import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
+import com.aurionpro.loanapp.dto.page.PageResponseDto;
 import com.aurionpro.loanapp.entity.Customer;
 import com.aurionpro.loanapp.entity.Document;
 import com.aurionpro.loanapp.entity.Loan;
@@ -35,6 +41,7 @@ import com.aurionpro.loanapp.repository.OfficerRepository;
 import com.aurionpro.loanapp.repository.UserRepository;
 import com.aurionpro.loanapp.service.EmailService;
 import com.aurionpro.loanapp.service.ILoanApplicationService;
+import com.aurionpro.loanapp.util.EmiCalculator;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -165,12 +172,15 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 	
 	@Override
-	public LoanApplicationResponseDto updateApplicationStatus(LoanApplicationStatusUpdateRequestDto request) {
+	@Transactional
+	public LoanApplicationResponseDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateRequestDto request) {
+		Officer officer = officerRepository.findByUserEmail(officerEmail).orElseThrow(
+				() -> new ResourceNotFoundException("Officer not found with email " + officerEmail));
+		
 		LoanApplication loanApplication = loanApplicationRepository.findById(request.getApplicationId()).orElseThrow(
 				() -> new ResourceNotFoundException("Application not found with id " + request.getApplicationId()));
 
-		Officer officer = officerRepository.findById(request.getOfficerId()).orElseThrow(
-				() -> new ResourceNotFoundException("Officer not found with id " + request.getOfficerId()));
+		
 
 		loanApplication.setApplicationStatus(request.getNewLoanApplicationStatus());
 		loanApplication.setAssignedOfficer(officer);
@@ -183,16 +193,19 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		return mapper.map(updatedApplication, LoanApplicationResponseDto.class);
 	}
 
+	@Transactional
 	private void createLoanFromApplication(LoanApplication application) {
 		Loan newLoan = new Loan();
 
+		BigDecimal emiAmount = EmiCalculator.calculateMonthlyInstallment(application.getRequiredAmount(), application.getLoanScheme().getInterestRate(), application.getTenure());
+		
 		newLoan.setLoanNumber(UUID.randomUUID()); // Generate a unique public ID
 		newLoan.setCustomer(application.getCustomer());
 		newLoan.setLoanScheme(application.getLoanScheme());
 		newLoan.setLoanAmount(application.getRequiredAmount());
-		newLoan.setInterestRate(application.getLoanScheme().getInterestRate());
 		newLoan.setTenureMonths(application.getTenure());
 		newLoan.setStartDate(LocalDateTime.now());
+		newLoan.setEmiAmount(emiAmount);
 		newLoan.setEndDate(LocalDateTime.now().plusMonths(application.getTenure()));
 		newLoan.setStatus(LoanStatus.ACTIVE);
 		newLoan.setCreatedAt(LocalDateTime.now());
@@ -205,5 +218,23 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	private boolean isEligible(LoanApplicationRequestDto applicationRequestDto) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize) {
+		User officerUser = userRepository.findByEmail(officerEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Officer not found with username: " + officerEmail));
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<LoanApplication> applicationPage= loanApplicationRepository.findByAssignedOfficerId(officerUser.getId(),pageable);
+        
+        List<LoanApplicationDto> applications= applicationPage.getContent().stream()
+        .map(application-> mapper.map(application, LoanApplicationDto.class))
+        .collect(Collectors.toList());
+        
+        PageResponseDto<LoanApplicationDto> response = mapper.map(applicationPage,PageResponseDto.class);
+        response.setContent(applications);
+        
+        return response;
 	}
 }

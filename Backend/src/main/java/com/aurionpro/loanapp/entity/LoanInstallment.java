@@ -17,7 +17,7 @@ import com.aurionpro.loanapp.property.PaymentStatus;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Installment {
+public class LoanInstallment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,10 +35,16 @@ public class Installment {
     @Column(nullable = false)
     private PaymentStatus status;
 
-    private LocalDateTime paidAt;
+    private LocalDateTime paymentDate;
+    
+    private BigDecimal penaltyAmount;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_id",nullable = false)
     private Loan loan;
+    
+    @OneToMany(mappedBy = "installment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Penalty> penalties;
 
 }
