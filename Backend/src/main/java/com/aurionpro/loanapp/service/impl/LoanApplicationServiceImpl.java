@@ -211,7 +211,35 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		newLoan.setStatus(LoanStatus.ACTIVE);
 		newLoan.setCreatedAt(LocalDateTime.now());
 		
+		
 		loanRepository.save(newLoan);
+		Customer customer = application.getCustomer();
+		User user = customer.getUser();
+		
+		EmailDto emailDto = new EmailDto();
+		emailDto.setTo(user.getEmail());
+		emailDto.setSubject("Loan Application Approved");
+		String body = "Dear " + user.getFirstName() + " " + user.getLastName() + ",\n\n"
+		        + "We are pleased to inform you that your loan application has been approved.\n\n"
+		        + "Here are the details of your approved loan:\n"
+		        + "--------------------------------------------------\n"
+		        + "Application ID : " + application.getApplicationId() + "\n"
+		        + "Loan Number    : " + newLoan.getLoanNumber() + "\n"
+		        + "Loan Amount    : ₹" + application.getRequiredAmount() + "\n"
+		        + "Tenure         : " + application.getTenure() + " months\n"
+		        + "EMI Amount     : ₹" + newLoan.getEmiAmount() + "\n"
+		        + "Status         : " + newLoan.getStatus() + "\n"
+		        + "Start Date     : " + newLoan.getStartDate().toLocalDate() + "\n"
+		        + "End Date       : " + newLoan.getEndDate().toLocalDate() + "\n"
+		        + "--------------------------------------------------\n\n"
+		        + "Please keep this information for your records.\n\n"
+		        + "If you have any questions or need assistance, feel free to contact our support team.\n\n"
+		        + "Thank you for choosing [Your Company Name].\n\n"
+		        + "Sincerely,\n"
+		        + "LoanSaathi Loan Department";
+
+		emailDto.setBody(body);
+		emailService.sendEmailWithoutImage(emailDto);
 
 	}
 
@@ -275,21 +303,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		appln.setApplicationStatus(LoanApplicationStatus.APPROVED);
 		loanApplicationRepository.save(appln);
 		
-		Customer customer = appln.getCustomer();
-		User user = customer.getUser();
-		
-		EmailDto emailDto = new EmailDto();
-		emailDto.setTo(user.getEmail());
-		emailDto.setSubject("Loan Application Approved");
-		 String body = "Dear " + user.getFirstName()+" "+ user.getLastName()+ ",\n\n"
-	                + "Congratulations! Your loan application with ID: " + appln.getApplicationId()
-	                + " has been approved.\n\n"
-	                + "Loan Amount: " + appln.getRequiredAmount() + "\n"
-	                + "Status: " + appln.getApplicationStatus() + "\n\n"
-	                + "Thank you for choosing us.\n\n"
-	                + "Regards,\nLoan Team";
-		emailDto.setBody(body);
-		emailService.sendEmailWithoutImage(emailDto);
+		createLoanFromApplication(appln);
 		
 	}
 
