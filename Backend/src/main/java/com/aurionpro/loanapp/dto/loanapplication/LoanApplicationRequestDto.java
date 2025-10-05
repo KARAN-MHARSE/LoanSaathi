@@ -1,10 +1,20 @@
 package com.aurionpro.loanapp.dto.loanapplication;
 
-import jakarta.validation.constraints.*;
-import lombok.Data;
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class LoanApplicationRequestDto {
 
     @NotNull(message = "Loan scheme ID is required.")
