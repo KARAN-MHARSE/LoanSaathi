@@ -3,7 +3,9 @@ package com.aurionpro.loanapp.scheduler;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,21 +29,33 @@ public class LoanInstallmentScheduler {
 	@Scheduled(cron = "0 0 0 20 * ?")
 	@Transactional
 	public void generateMonthlyInstallment() {
+		System.out.println("Start ins");
 		List<Loan> activeLoans = loanRepository.findAllByStatus(LoanStatus.ACTIVE);
-
+		
 		for (Loan loan : activeLoans) {
+			System.out.println(loan);
 			LocalDateTime nextDueDate = getNextInstallmentDate(loan);
 
-			if (nextDueDate.isAfter(loan.getCreatedAt().plusMonths(loan.getTenureMonths()))) {
+			if (nextDueDate.isBefore(loan.getCreatedAt().plusMonths(loan.getTenureMonths()))) {
 				boolean exists = installmentRepository.existsByLoanAndDueDate(loan, nextDueDate);
 
                 if (!exists && loan.getInstallments().size() < loan.getTenureMonths()) {
+                	Optional<Integer> lastEMiNumber = loan.getInstallments().stream()
+                			.map(LoanInstallment::getInstallmentNumber)
+                			.max(Comparator.naturalOrder());
+                	
 					LoanInstallment installment = new LoanInstallment();
 					installment.setLoan(loan);
 					installment.setAmount(loan.getEmiAmount());
 					installment.setDueDate(nextDueDate);
 					installment.setStatus(PaymentStatus.PENDING);
 					installment.setPenaltyAmount(BigDecimal.ZERO);
+					
+					if(lastEMiNumber.isPresent()){
+						installment.setInstallmentNumber(lastEMiNumber.get()+1);
+					}else {
+						installment.setInstallmentNumber(1);
+					}
 
 					installmentRepository.save(installment);
 				}
