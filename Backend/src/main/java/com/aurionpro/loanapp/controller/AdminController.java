@@ -1,5 +1,7 @@
 package com.aurionpro.loanapp.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
 import com.aurionpro.loanapp.dto.eligibility.EligibilityRequestDto;
-import com.aurionpro.loanapp.dto.officer.OfficerRequestDto;
 import com.aurionpro.loanapp.service.IEligibilityService;
 import com.aurionpro.loanapp.service.IOfficerService;
 
@@ -34,9 +36,10 @@ public class AdminController {
 	@PostMapping("/add/officer")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> addOfficer(
-			@RequestBody @Valid OfficerRequestDto requestDto
+			@RequestBody @Valid RegisterRequestDto requestDto, LocalDate date
 			){
-		officerService.addOfficer(requestDto);
+		
+		officerService.addOfficer(requestDto,date);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	

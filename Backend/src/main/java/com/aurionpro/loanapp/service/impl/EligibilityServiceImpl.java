@@ -38,6 +38,7 @@ public class EligibilityServiceImpl implements IEligibilityService {
 				.loanScheme(loanScheme)
 				.build();
 
+		loanScheme.getEligibilities().add(eligibility);
 		eligibilityRepository.save(eligibility);
 
 	}
