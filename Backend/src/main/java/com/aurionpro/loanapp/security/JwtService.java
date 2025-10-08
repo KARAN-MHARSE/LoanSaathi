@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.aurionpro.loanapp.entity.User;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -51,4 +53,13 @@ public class JwtService {
 		return Keys.hmacShaKeyFor(secretKey.getBytes());
 	}
 
+	public String generateTokenWithUserDetails(User user) {
+	    return Jwts.builder()
+	        .setSubject(user.getEmail())
+	        .claim("roles", user.getRole().getRoleName().name())  // assuming single role; adapt if multiple
+	        .setIssuedAt(new Date(System.currentTimeMillis()))
+	        .setExpiration(new Date(System.currentTimeMillis() + expirtyDate))
+	        .signWith(generateKey(), SignatureAlgorithm.HS256)
+	        .compact();
+	}
 }

@@ -58,5 +58,11 @@ public class AuthController {
             return ResponseEntity.badRequest().body("OTP verification failed.");
         }
     }
+	
+	@PostMapping("/google-login")
+	public ResponseEntity<LoginResponseDto> googleLogin(@RequestBody String idToken) {
+	    LoginResponseDto response = authService.loginWithGoogle(idToken);
+	    return ResponseEntity.ok(response);
+	}
 
 }
