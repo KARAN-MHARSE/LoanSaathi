@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.service.impl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -211,7 +212,35 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		newLoan.setStatus(LoanStatus.ACTIVE);
 		newLoan.setCreatedAt(LocalDateTime.now());
 		
+		
 		loanRepository.save(newLoan);
+		Customer customer = application.getCustomer();
+		User user = customer.getUser();
+		
+		EmailDto emailDto = new EmailDto();
+		emailDto.setTo(user.getEmail());
+		emailDto.setSubject("Loan Application Approved");
+		String body = "Dear " + user.getFirstName() + " " + user.getLastName() + ",\n\n"
+		        + "We are pleased to inform you that your loan application has been approved.\n\n"
+		        + "Here are the details of your approved loan:\n"
+		        + "--------------------------------------------------\n"
+		        + "Application ID : " + application.getApplicationId() + "\n"
+		        + "Loan Number    : " + newLoan.getLoanNumber() + "\n"
+		        + "Loan Amount    : ₹" + application.getRequiredAmount() + "\n"
+		        + "Tenure         : " + application.getTenure() + " months\n"
+		        + "EMI Amount     : ₹" + newLoan.getEmiAmount() + "\n"
+		        + "Status         : " + newLoan.getStatus() + "\n"
+		        + "Start Date     : " + newLoan.getStartDate().toLocalDate() + "\n"
+		        + "End Date       : " + newLoan.getEndDate().toLocalDate() + "\n"
+		        + "--------------------------------------------------\n\n"
+		        + "Please keep this information for your records.\n\n"
+		        + "If you have any questions or need assistance, feel free to contact our support team.\n\n"
+		        + "Thank you for choosing [Your Company Name].\n\n"
+		        + "Sincerely,\n"
+		        + "LoanSaathi Loan Department";
+
+		emailDto.setBody(body);
+		emailService.sendEmailWithoutImage(emailDto);
 
 	}
 
@@ -261,5 +290,51 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		    return mapper.map(application,LoanApplicationResponseDto.class);
 		
 
+	}
+
+	@Override
+	public List<LoanApplicationDto> getApplicationsForCurrentUser(String email) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found with email id " + email));
+
+		Customer customer = customerRepository.findById(user.getId()).orElseThrow(
+				() -> new ResourceNotFoundException("Customer profile is not created yet, first create it"));
+		
+		List<LoanApplicationDto> response = new ArrayList<>();
+		for(LoanApplication appln: customer.getLoanApplications()) {
+			response.add(mapper.map(appln, LoanApplicationDto.class));
+		}
+		
+		return response;
+	}
+
+	@Override
+	public LoanApplicationDto getApplicationStatus(String applicationId) {
+		// TODO Auto-generated method stub
+		LoanApplication appln = loanApplicationRepository.findByApplicationId(applicationId).
+				orElseThrow(()-> new ResourceNotFoundException("Application not found"));
+		
+		return mapper.map(appln, LoanApplicationDto.class);
+	}
+
+	// Officer
+	
+	@Override
+	public void approveApplication(String applicationId) {
+		// TODO Auto-generated method stub
+		LoanApplication appln = loanApplicationRepository.findByApplicationId(applicationId).
+				orElseThrow(()-> new ResourceNotFoundException("Application not found"));
+		appln.setApplicationStatus(LoanApplicationStatus.APPROVED);
+		loanApplicationRepository.save(appln);
+		
+		createLoanFromApplication(appln);
+		
+	}
+
+	@Override
+	public void rejectApplication(String applicationId, LoanApplicationStatus applicationStatus) {
+		// TODO Auto-generated method stub
+		
 	}
 }

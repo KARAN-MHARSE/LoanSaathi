@@ -17,4 +17,5 @@ public interface IAuthService {
 	void sendForgetPasswordOtp(String email);
     void resetPassword(ResetPasswordRequestDto resetPasswordRequestDto);
     void logout(String email);
+	LoginResponseDto loginWithGoogle(String idToken);
 }

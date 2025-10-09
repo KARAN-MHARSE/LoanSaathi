@@ -23,13 +23,13 @@ public interface ILoanApplicationService {
 	public LoanApplicationResponseDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateRequestDto request);
 
 
-//    List<LoanApplicationDto> getApplicationsForCurrentUser(User user);
-//    LoanApplicationDto getApplicationStatus(String applicationId);
+    List<LoanApplicationDto> getApplicationsForCurrentUser(String email);
+    LoanApplicationDto getApplicationStatus(String applicationId);
 
 //    Officer (User from authentication)
 	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize);
-//    void approveApplication(String applicationId);
-//    void rejectApplication(String applicationId, LoanApplicationStatus applicationStatus);
+    void approveApplication(String applicationId);
+    void rejectApplication(String applicationId, LoanApplicationStatus applicationStatus);
 //    void requestAdditionalDocuments(String applicationId, DocumentRequestDto documentRequestDto);
 //
 //

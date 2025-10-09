@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.entity.LoanApplication;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
@@ -15,6 +16,8 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
 	List<LoanApplication> findByCustomer(User applicant);
 
 	Page<LoanApplication> findByAssignedOfficerId(Long officerId, Pageable pageable);
+
+	Optional<LoanApplication> findByApplicationId(String applicationId);
 
 //    Page<LoanApplication> findAllByApplicationStatus(LoanApplicationStatus status, Pageable pageable);
 }

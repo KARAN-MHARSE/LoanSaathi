@@ -2,7 +2,6 @@ package com.aurionpro.loanapp.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,5 +58,11 @@ public class AuthController {
             return ResponseEntity.badRequest().body("OTP verification failed.");
         }
     }
+	
+	@PostMapping("/google-login")
+	public ResponseEntity<LoginResponseDto> googleLogin(@RequestBody String idToken) {
+	    LoginResponseDto response = authService.loginWithGoogle(idToken);
+	    return ResponseEntity.ok(response);
+	}
 
 }

@@ -33,9 +33,14 @@ public class Officer {
     @Column(nullable = false, unique = true, length = 20)
     private String employeeId;
     
-    private LocalDate hireDate;
+    @Column(nullable = false)
+    private LocalDate hireDate = LocalDate.now();
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
+    private boolean isActive = true;
 
     @OneToMany(mappedBy = "assignedOfficer")
     List<LoanApplication> loanApplications;
+    
 
 }
