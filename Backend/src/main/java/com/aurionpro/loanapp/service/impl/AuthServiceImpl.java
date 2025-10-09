@@ -55,9 +55,10 @@ public class AuthServiceImpl implements IAuthService {
 		}
 
 		User user = mapper.map(registerDto, User.class);
+		
 		user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-		Role role = roleRepository.findByRoleName(registerDto.getRoleName())
+		Role role = roleRepository.findByRoleName(RoleType.ROLE_CUSTOMER)
 				.orElseThrow(() -> new RuntimeException("Role is not exist"));
 
 		role.getUsers().add(user);

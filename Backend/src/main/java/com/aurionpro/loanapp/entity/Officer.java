@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,7 +26,7 @@ public class Officer {
 	@Id
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
 	@MapsId
 	@JoinColumn(name="user_id")
 	private User user;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
@@ -13,8 +14,13 @@ import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.officer.OfficerDashboardDto;
 import com.aurionpro.loanapp.entity.LoanApplication;
 import com.aurionpro.loanapp.entity.Officer;
+import com.aurionpro.loanapp.entity.Role;
 import com.aurionpro.loanapp.entity.User;
+import com.aurionpro.loanapp.exception.UserAlreadyExistException;
+import com.aurionpro.loanapp.exception.UserNotFoundException;
+import com.aurionpro.loanapp.property.RoleType;
 import com.aurionpro.loanapp.repository.OfficerRepository;
+import com.aurionpro.loanapp.repository.RoleRepository;
 import com.aurionpro.loanapp.repository.UserRepository;
 import com.aurionpro.loanapp.service.IAuthService;
 import com.aurionpro.loanapp.service.IOfficerService;
@@ -26,73 +32,67 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OfficerServiceImpl implements IOfficerService{
-    private final OfficerRepository officerRepository;
-    private final UserRepository userRepository;
-    private final IAuthService authService;
-    private final ModelMapper mapper;
+public class OfficerServiceImpl implements IOfficerService {
+	private final OfficerRepository officerRepository;
+	private final RoleRepository roleRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final ModelMapper mapper;
 
-    @Override
+	@Override
 	public OfficerDashboardDto getOfficerDashboard(String officerEmail) {
-    	 Officer officer = officerRepository.findByUserEmail(officerEmail)
-                 .orElseThrow(() -> new RuntimeException("Officer not found"));
+		Officer officer = officerRepository.findByUserEmail(officerEmail)
+				.orElseThrow(() -> new RuntimeException("Officer not found"));
 
-         User user = officer.getUser();
+		User user = officer.getUser();
 
-         List<LoanApplication> applications = officer.getLoanApplications();
+		List<LoanApplication> applications = officer.getLoanApplications();
 
-         List<LoanApplicationDto> applicationDtos = applications.stream()
-                 .map(app -> mapper.map(app,LoanApplicationDto.class))
-                 .collect(Collectors.toList());
+		List<LoanApplicationDto> applicationDtos = applications.stream()
+				.map(app -> mapper.map(app, LoanApplicationDto.class)).collect(Collectors.toList());
 
-         long total = applications.size();
-         long pending = applications.stream().filter(a -> a.getApplicationStatus().name().equals("PENDING")).count();
-         long approved = applications.stream().filter(a -> a.getApplicationStatus().name().equals("APPROVED")).count();
-         long rejected = applications.stream().filter(a -> a.getApplicationStatus().name().equals("REJECTED")).count();
+		long total = applications.size();
+		long pending = applications.stream().filter(a -> a.getApplicationStatus().name().equals("PENDING")).count();
+		long approved = applications.stream().filter(a -> a.getApplicationStatus().name().equals("APPROVED")).count();
+		long rejected = applications.stream().filter(a -> a.getApplicationStatus().name().equals("REJECTED")).count();
 
-         return new OfficerDashboardDto(
-                 user.getFirstName(),
-                 user.getLastName(),
-                 user.getEmail(),
-                 user.getPhoneNumber(),
-                 officer.getEmployeeId(),
-                 officer.getHireDate(),
-                 user.getProfileUrl(),
-                 (int) total,
-                 (int) pending,
-                 (int) approved,
-                 (int) rejected,
-                 applicationDtos
-         );
+		return new OfficerDashboardDto(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(),
+				officer.getEmployeeId(), officer.getHireDate(), user.getProfileUrl(), (int) total, (int) pending,
+				(int) approved, (int) rejected, applicationDtos);
 	}
 
 	@Override
+	@Transactional
 	public void addOfficer(@Valid RegisterRequestDto requestDto, LocalDate date) {
-		// TODO Auto-generated method stub
+		if (officerRepository.existsByUserEmail(requestDto.getEmail())) {
+			throw new UserAlreadyExistException("User already exist with email id " + requestDto.getEmail());
+		}
+
+		User user = mapper.map(requestDto, User.class);
+
+		user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+
+		Role role = roleRepository.findByRoleName(RoleType.ROLE_CUSTOMER)
+				.orElseThrow(() -> new RuntimeException("Role is not exist"));
+
+		role.getUsers().add(user);
+		user.setRole(role);
 		
-		RegisterResponseDto registerResponse = authService.register(requestDto);
-		
-		User user = userRepository.findById(registerResponse.getId()).
-				orElseThrow(()->new RuntimeException("User not found"));
 		Officer officer = new Officer();
-		
-		long timestamp = System.currentTimeMillis();
-		officer.setEmployeeId("EMP"+timestamp);
-		officer.setId(user.getId());
+		officer.setActive(true);
+		officer.setEmployeeId("E"+System.currentTimeMillis());
+		officer.setHireDate(LocalDate.now());
 		officer.setUser(user);
-		officer.setHireDate(date);
-		user.setOfficerProfile(officer);
+
 		officerRepository.save(officer);
-		
 	}
 
 	@Override
 	public void removeOfficer(@Valid String empId) {
-		// TODO Auto-generated method stub
-		 Officer officer = officerRepository.findByEmployeeId(empId)
-                 .orElseThrow(() -> new RuntimeException("Officer not found"));
-		 officer.setActive(false);
-		 officerRepository.save(officer);
+		Officer officer = officerRepository.findByEmployeeId(empId)
+				.orElseThrow(() -> new UserNotFoundException("Officer not found with id "+empId));
+		officer.setActive(false);
+		officer.getUser().setActive(false);
+		officerRepository.save(officer);
 	}
-	
+
 }

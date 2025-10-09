@@ -58,8 +58,8 @@ public class User implements UserDetails {
 
 	private LocalDate dateOfBirth;
 
-	@Column(name = "is_deleted", nullable = false)
-	private boolean isDeleted = false;
+	@Column( nullable = false)
+	private boolean isActive = true;
 
 	@Column(name = "auth_provider")
 	private AuthProvider authProvider;

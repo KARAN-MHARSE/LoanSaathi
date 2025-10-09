@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 
 public interface OfficerRepository extends JpaRepository<Officer, Long> {
 	Optional<Officer> findByUserEmail(String officerEmail);
+	
+	boolean existsByUserEmail(String email);
 
 	Optional<Officer> findByEmployeeId(@Valid String empId);
 }
