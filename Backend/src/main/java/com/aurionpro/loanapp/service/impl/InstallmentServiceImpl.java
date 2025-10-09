@@ -116,6 +116,7 @@ public class InstallmentServiceImpl implements IInstallmentService {
 	    allInstallments.addAll(newlyGeneratedInstallments);
 
 	    return allInstallments.stream()
+	    	    .sorted(Comparator.comparing(LoanInstallment::getInstallmentNumber))
 	            .map(i -> mapper.map(i, InstallmentResponseDto.class))
 	            .collect(Collectors.toList());
 	}
