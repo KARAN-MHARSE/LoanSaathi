@@ -7,7 +7,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import com.aurionpro.loanapp.property.PaymentStatus;
@@ -38,6 +41,9 @@ public class LoanInstallment {
     private LocalDateTime paymentDate;
     
     private BigDecimal penaltyAmount;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,6 +51,6 @@ public class LoanInstallment {
     private Loan loan;
     
     @OneToMany(mappedBy = "installment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Penalty> penalties;
+    private List<Penalty> penalties = new ArrayList<>();
 
 }
