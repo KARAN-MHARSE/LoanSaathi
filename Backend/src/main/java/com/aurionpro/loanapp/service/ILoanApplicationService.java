@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aurionpro.loanapp.dto.dashboard.document.DocumentRequestDto;
@@ -33,4 +34,5 @@ public interface ILoanApplicationService {
 //
 //
 //    List<LoanApplicationDto> getAllApplications(String statusFilter, int page, int size);
+	LoanApplicationResponseDto getApplicationById(Long applicationId, Authentication authentication);
 }

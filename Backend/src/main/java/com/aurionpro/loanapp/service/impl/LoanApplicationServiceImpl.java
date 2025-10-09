@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -265,6 +266,30 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
         response.setContent(applications);
         
         return response;
+	}
+
+	@Override
+	public LoanApplicationResponseDto getApplicationById(Long applicationId, Authentication authentication) {
+		    LoanApplication application = loanApplicationRepository.findById(applicationId)
+		            .orElseThrow(() -> new ResourceNotFoundException("Loan application not found with ID: " + applicationId));
+
+		    boolean isCustomer = authentication.getAuthorities().stream()
+		            .anyMatch(role -> role.getAuthority().equals("ROLE_CUSTOMER"));
+
+		    if (isCustomer) {
+		        String customerEmail = authentication.getName();
+		        
+		        // Security Check: Verify that the logged-in customer is the owner of the application.
+		        if (!application.getCustomer().getUser().getEmail().equals(customerEmail)) {
+		            throw new AccessDeniedException("You do not have permission to view this application.");
+		        }
+		        
+		        return mapper.map(application,LoanApplicationResponseDto.class);
+
+		    } 
+		    return mapper.map(application,LoanApplicationResponseDto.class);
+		
+
 	}
 
 	@Override

@@ -1,17 +1,30 @@
 package com.aurionpro.loanapp.entity;
 
-import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.aurionpro.loanapp.property.PaymentStatus;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.web.jsf.FacesContextUtils;
-
-import com.aurionpro.loanapp.property.PaymentStatus;
 
 @Entity
 @Table(name="installments")
@@ -39,6 +52,9 @@ public class LoanInstallment {
     private LocalDateTime paymentDate;
     
     private BigDecimal penaltyAmount;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +62,6 @@ public class LoanInstallment {
     private Loan loan;
     
     @OneToMany(mappedBy = "installment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Penalty> penalties;
+    private List<Penalty> penalties = new ArrayList<>();
 
 }
