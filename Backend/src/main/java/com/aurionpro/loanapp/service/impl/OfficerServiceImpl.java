@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aurionpro.loanapp.dto.EmailDto;
 import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
 import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
@@ -16,12 +18,14 @@ import com.aurionpro.loanapp.entity.LoanApplication;
 import com.aurionpro.loanapp.entity.Officer;
 import com.aurionpro.loanapp.entity.Role;
 import com.aurionpro.loanapp.entity.User;
+import com.aurionpro.loanapp.exception.ResourceNotFoundException;
 import com.aurionpro.loanapp.exception.UserAlreadyExistException;
 import com.aurionpro.loanapp.exception.UserNotFoundException;
 import com.aurionpro.loanapp.property.RoleType;
 import com.aurionpro.loanapp.repository.OfficerRepository;
 import com.aurionpro.loanapp.repository.RoleRepository;
 import com.aurionpro.loanapp.repository.UserRepository;
+import com.aurionpro.loanapp.service.EmailService;
 import com.aurionpro.loanapp.service.IAuthService;
 import com.aurionpro.loanapp.service.IOfficerService;
 
@@ -35,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class OfficerServiceImpl implements IOfficerService {
 	private final OfficerRepository officerRepository;
 	private final RoleRepository roleRepository;
+	private final EmailService emailService;
 	private final PasswordEncoder passwordEncoder;
 	private final ModelMapper mapper;
 
@@ -62,7 +67,7 @@ public class OfficerServiceImpl implements IOfficerService {
 
 	@Override
 	@Transactional
-	public void addOfficer(@Valid RegisterRequestDto requestDto, LocalDate date) {
+	public RegisterResponseDto addOfficer(@Valid RegisterRequestDto requestDto) {
 		if (officerRepository.existsByUserEmail(requestDto.getEmail())) {
 			throw new UserAlreadyExistException("User already exist with email id " + requestDto.getEmail());
 		}
@@ -82,9 +87,46 @@ public class OfficerServiceImpl implements IOfficerService {
 		officer.setEmployeeId("E"+System.currentTimeMillis());
 		officer.setHireDate(LocalDate.now());
 		officer.setUser(user);
+		
 
-		officerRepository.save(officer);
+		Officer savedOfficer = officerRepository.save(officer);
+		RegisterResponseDto registerResponseDto = new RegisterResponseDto();
+		registerResponseDto.setCreatedAt(savedOfficer.getUser().getCreatedAt());
+		registerResponseDto.setId(savedOfficer.getId());
+		registerResponseDto.setUsername(requestDto.getEmail());
+		
+		sendAddOfficerEmail(requestDto);
+		
+		return registerResponseDto;
 	}
+
+
+
+	@Async
+	private void sendAddOfficerEmail(RegisterRequestDto requestDto) {
+	    EmailDto emailDto = new EmailDto();
+	    emailDto.setTo(requestDto.getEmail());
+	    emailDto.setSubject("Welcome to LoanSaathi - Your Officer Account Created");
+	    
+	    String body = String.format(
+	        "Dear %s %s,\n\n" +
+	        "Your officer account has been created successfully.\n\n" +
+	        "Here are your login details:\n" +
+	        "Email: %s\n" +
+	        "Password: %s\n\n" +
+	        "Please log in and change your password immediately for security.\n\n" +
+	        "Regards,\nLoanSaathi Team",
+	        requestDto.getFirstName(),
+	        requestDto.getLastName(),
+	        requestDto.getEmail(),
+	        requestDto.getPassword()
+	    );
+	    
+	    emailDto.setBody(body);
+
+	    emailService.sendEmailWithoutImage(emailDto);
+	}
+
 
 	@Override
 	public void removeOfficer(@Valid String empId) {
