@@ -1,5 +1,6 @@
 package com.aurionpro.loanapp.entity;
 
+import com.aurionpro.loanapp.property.EligibilityCriteria;
 import com.aurionpro.loanapp.property.Operator;
 
 import jakarta.persistence.Column;
@@ -22,7 +23,7 @@ public class Eligibility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private EligibilityCriteria name;
     private String description;
     private String value;
 

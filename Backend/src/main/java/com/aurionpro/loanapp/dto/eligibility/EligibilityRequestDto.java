@@ -1,5 +1,6 @@
 package com.aurionpro.loanapp.dto.eligibility;
 
+import com.aurionpro.loanapp.property.EligibilityCriteria;
 import com.aurionpro.loanapp.property.Operator;
 
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class EligibilityRequestDto {
 
 	 @NotBlank(message = "Name is required")
-	    private String name;
+	    private EligibilityCriteria name;
 
 	    private String description;
 

@@ -9,6 +9,7 @@ import com.aurionpro.loanapp.dto.eligibility.EligibilityRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.entity.Eligibility;
 import com.aurionpro.loanapp.entity.LoanScheme;
+import com.aurionpro.loanapp.exception.DuplicateResourceException;
 import com.aurionpro.loanapp.exception.ResourceNotFoundException;
 import com.aurionpro.loanapp.repository.EligibilityRepository;
 import com.aurionpro.loanapp.repository.LoanSchemeRepository;
@@ -29,6 +30,12 @@ public class EligibilityServiceImpl implements IEligibilityService {
 		// Fetch the loan scheme
 		LoanScheme loanScheme = loanSchemeRepository.findById(eligibilityDto.getLoanSchemeId()).orElseThrow(
 				() -> new RuntimeException("Loan scheme not found with id: " + eligibilityDto.getLoanSchemeId()));
+		for(Eligibility eligibility:loanScheme.getEligibilities()) {
+			if(eligibility.getName()== eligibilityDto.getName()) {
+				throw new DuplicateResourceException("Eligibility criteria already present");
+			}
+		}
+		
 
 		Eligibility eligibility = Eligibility.builder()
 				.name(eligibilityDto.getName())
@@ -56,8 +63,7 @@ public class EligibilityServiceImpl implements IEligibilityService {
 
 	@Override
 	public boolean checkEligibility(@Valid LoanApplicationRequestDto requestDto) {
-	    // 1. Fetch all eligibility rules for the given loan scheme
-		
+
 	    LoanScheme loanScheme= loanSchemeRepository.findById(requestDto.getLoanSchemeId())
 	    		.orElseThrow(()->new ResourceNotFoundException("Loan Scheme Not Found"));
 	    List<Eligibility> rules = loanScheme.getEligibilities();
@@ -78,17 +84,19 @@ public class EligibilityServiceImpl implements IEligibilityService {
 	
 	private boolean evaluateRule(LoanApplicationRequestDto dto, Eligibility rule) {
 	    try {
-	        Field field = LoanApplicationRequestDto.class.getDeclaredField(rule.getName());
+	        Field field = LoanApplicationRequestDto.class.getDeclaredField(rule.getName().toString());
 	        field.setAccessible(true);
-
 	        Object actualValue = field.get(dto);
 	        String expectedValue = rule.getValue();
-
 	        return rule.getOperator().evaluate(actualValue, expectedValue);
+	    } catch (NoSuchFieldException e) {
+	        // Skip rule if no matching field
+	        return true;
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return false;
 	    }
 	}
+
 
 }
