@@ -13,6 +13,7 @@ public interface IAuthService {
 
 	RegisterResponseDto register(RegisterRequestDto registerDto);
 	LoginResponseDto login(LoginRequestDto requestDto);
+	void sendEmailValidateOtp(String email);
 	boolean forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
 	void sendForgetPasswordOtp(String email);
     void resetPassword(ResetPasswordRequestDto resetPasswordRequestDto);

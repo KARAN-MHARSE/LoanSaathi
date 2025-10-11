@@ -53,6 +53,8 @@ public class LoanApplication {
 	@Column(nullable = false)
 	private LoanApplicationStatus applicationStatus;
 	
+	private String remark;
+	
 	@CreationTimestamp
 	@Column(nullable = false,updatable = false)
 	private LocalDateTime createdAt;

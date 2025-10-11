@@ -2,11 +2,14 @@ package com.aurionpro.loanapp.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aurionpro.loanapp.dto.OtpDto;
 import com.aurionpro.loanapp.dto.auth.ForgotPasswordRequestDto;
 import com.aurionpro.loanapp.dto.auth.LoginRequestDto;
 import com.aurionpro.loanapp.dto.auth.LoginResponseDto;
@@ -14,6 +17,7 @@ import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
 import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
 import com.aurionpro.loanapp.dto.auth.ResetPasswordRequestDto;
 import com.aurionpro.loanapp.service.IAuthService;
+import com.aurionpro.loanapp.service.impl.OtpService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*")
 public class AuthController {
 	private final IAuthService authService;
+	private final OtpService otpService;
 
 	@PostMapping("/login")
 	@CrossOrigin(origins = "*")
@@ -35,6 +40,19 @@ public class AuthController {
 	public ResponseEntity<RegisterResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
 		RegisterResponseDto response = authService.register(registerRequestDto);
 		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/send-otp")
+	public ResponseEntity<?> sendEmailValidationOtp(@RequestParam String email){
+		authService.sendEmailValidateOtp(email);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/validate-otp")
+	public ResponseEntity<Boolean> validateOtp(@RequestBody OtpDto requestDto) {
+		System.out.println(requestDto.getCode());
+		boolean isValid = otpService.validateOtp(requestDto.getEmail(), requestDto.getCode());
+		return ResponseEntity.ok(isValid);
 	}
 	
 	@PostMapping("/reset-password")

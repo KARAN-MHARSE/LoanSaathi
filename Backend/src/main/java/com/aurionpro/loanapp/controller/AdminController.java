@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,11 +45,11 @@ public class AdminController {
 	}
 	
 	//remove officer
-	@PostMapping("/remove/officer")
+	@DeleteMapping("/officer")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> removeOfficer(@RequestParam @Valid String empId){
 		officerService.removeOfficer(empId);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
 	//add eligibility for loan scheme

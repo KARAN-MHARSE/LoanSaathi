@@ -76,7 +76,7 @@ public class OfficerServiceImpl implements IOfficerService {
 
 		user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
-		Role role = roleRepository.findByRoleName(RoleType.ROLE_CUSTOMER)
+		Role role = roleRepository.findByRoleName(RoleType.ROLE_OFFICER)
 				.orElseThrow(() -> new RuntimeException("Role is not exist"));
 
 		role.getUsers().add(user);

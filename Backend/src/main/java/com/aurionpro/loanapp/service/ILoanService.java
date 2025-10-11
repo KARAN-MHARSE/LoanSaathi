@@ -2,7 +2,6 @@ package com.aurionpro.loanapp.service;
 
 import java.util.List;
 
-import com.aurionpro.loanapp.dto.InstallmentDto;
 import com.aurionpro.loanapp.dto.RepaymentRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationResponseDto;

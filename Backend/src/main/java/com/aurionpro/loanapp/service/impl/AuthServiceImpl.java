@@ -49,11 +49,25 @@ public class AuthServiceImpl implements IAuthService {
 	private final EmailService emailService;
 
 	@Override
+	public void sendEmailValidateOtp(String email) {
+		String otp = otpService.generateOtp(email, 120L);
+		String mailBody = "Otp to validate the email is " + otp;
+
+		EmailDto emailDto = new EmailDto();
+		emailDto.setTo(email);
+		emailDto.setSubject("Otp to Validate email");
+		emailDto.setBody(mailBody);
+
+		emailService.sendEmailWithoutImage(emailDto);
+		
+	}
+	
+	@Override
 	public RegisterResponseDto register(RegisterRequestDto registerDto) {
 		if (userRepository.existsByEmail(registerDto.getEmail())) {
 			throw new RuntimeException("User already exist");
 		}
-
+		
 		User user = mapper.map(registerDto, User.class);
 		
 		user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
@@ -167,7 +181,6 @@ public class AuthServiceImpl implements IAuthService {
 			registerDto.setFirstName(firstName);
 			registerDto.setLastName(lastName);
 			registerDto.setPassword(PasswordGenerator.generateRandomPassword(12)); // generate a secure random password
-			registerDto.setRoleName(RoleType.ROLE_CUSTOMER); // default role or as needed
 			registerDto.setAuthProvider(AuthProvider.FOREIGN);
 
 			register(registerDto);
@@ -195,5 +208,7 @@ public class AuthServiceImpl implements IAuthService {
 			return null;
 		}
 	}
+
+	
 
 }
