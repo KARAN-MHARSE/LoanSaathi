@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.scheduler;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ public class LoanInstallmentEmailScheduler {
 		}
 	}
 
+	@Async
 	private void sendEmail(LoanInstallment installment) {
 		String to = installment.getLoan().getCustomer().getUser().getEmail();
 		String subject = "Monthly Loan Installment Reminder";
@@ -43,7 +45,7 @@ public class LoanInstallmentEmailScheduler {
 		}
 
 		StringBuilder bodyBuilder = new StringBuilder();
-		bodyBuilder.append("Dear ").append(installment.getLoan().getCustomer().getName()).append(",\n\n");
+		bodyBuilder.append("Dear ").append(installment.getLoan().getCustomer().getUser().getFirstName()).append(",\n\n");
 		bodyBuilder.append("This is a reminder for your upcoming loan installment.\n");
 		bodyBuilder.append("Installment Amount: ₹").append(installmentAmount).append("\n");
 
