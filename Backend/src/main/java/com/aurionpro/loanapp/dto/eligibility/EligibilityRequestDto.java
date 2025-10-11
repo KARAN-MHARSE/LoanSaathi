@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EligibilityRequestDto {
 
-	 @NotBlank(message = "Name is required")
+//		@NotBlank(message = "Name is required")
 	    private EligibilityCriteria name;
 
 	    private String description;
