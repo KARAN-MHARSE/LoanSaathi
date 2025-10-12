@@ -277,12 +277,17 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
         return response;
 	}
 	
-	public PageResponseDto<LoanApplicationDto> getApprovedApplicationsOfOfficer(String officerEmail, int pageNumber, int pageSize){
+	@Override
+	public PageResponseDto<LoanApplicationDto> getApplicationsOfOfficerByStatus(
+			String officerEmail,
+			LoanApplicationStatus status,
+			int pageNumber,
+			int pageSize){
 		User officerUser = userRepository.findByEmail(officerEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Officer not found with username: " + officerEmail));
 
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<LoanApplication> applicationPage= loanApplicationRepository.findAllByApplicationStatusAndAssignedOfficerId(LoanApplicationStatus.APPROVED,officerUser.getId(),pageable);
+        Page<LoanApplication> applicationPage= loanApplicationRepository.findAllByApplicationStatusAndAssignedOfficerId(status,officerUser.getId(),pageable);
         
         List<LoanApplicationDto> applications= applicationPage.getContent().stream()
         .map(application-> mapper.map(application, LoanApplicationDto.class))

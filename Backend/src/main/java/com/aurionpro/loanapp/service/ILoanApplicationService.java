@@ -34,13 +34,13 @@ public interface ILoanApplicationService {
 //    Officer (User from authentication)
 	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,
 			int pageSize);
-
-	PageResponseDto<LoanApplicationDto> getApprovedApplicationsOfOfficer(String officerEmail, int pageNumber, int pageSize);
-
 	// void requestAdditionalDocuments(String applicationId, DocumentRequestDto
 	// documentRequestDto);
 //
 //
 //    List<LoanApplicationDto> getAllApplications(String statusFilter, int page, int size);
 	LoanApplicationResponseDto getApplicationById(Long applicationId, Authentication authentication);
+
+	PageResponseDto<LoanApplicationDto> getApplicationsOfOfficerByStatus(String officerEmail, LoanApplicationStatus status,
+			int pageNumber, int pageSize);
 }

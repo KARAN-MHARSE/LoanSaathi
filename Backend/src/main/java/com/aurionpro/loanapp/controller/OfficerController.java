@@ -16,6 +16,7 @@ import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateDto;
 import com.aurionpro.loanapp.dto.officer.OfficerDashboardDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
+import com.aurionpro.loanapp.property.LoanApplicationStatus;
 import com.aurionpro.loanapp.service.ILoanApplicationService;
 import com.aurionpro.loanapp.service.IOfficerService;
 
@@ -36,6 +37,18 @@ public class OfficerController {
 		LoanApplicationStatusUpdateDto response= loanApplicationService.updateApplicationStatus(principal.getName(), requestDto);
 		return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
 	}
+	
+	@GetMapping("/applications")
+	public ResponseEntity<PageResponseDto<LoanApplicationDto>> getApprovedApplicationsOfOfficer(
+			Principal principal,
+			@RequestParam LoanApplicationStatus status,
+			@RequestParam(defaultValue = "0") int pageNumber,
+			@RequestParam(defaultValue = "10") int pageSize) {
+		PageResponseDto<LoanApplicationDto> response = loanApplicationService.getApplicationsOfOfficerByStatus(principal.getName(),status, pageNumber, pageSize);
+
+		return ResponseEntity.ok(response);
+	}
+
 
 	@GetMapping("/applications/assigned")
 	public ResponseEntity<PageResponseDto<LoanApplicationDto>> getAssignedApplicationsOfOfficer(Principal principal,
@@ -46,15 +59,7 @@ public class OfficerController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping("/applications/approved")
-	public ResponseEntity<PageResponseDto<LoanApplicationDto>> getApprovedApplicationsOfOfficer(Principal principal,
-			@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
-		PageResponseDto<LoanApplicationDto> response = loanApplicationService
-				.getApprovedApplicationsOfOfficer(principal.getName(), pageNumber, pageSize);
-
-		return ResponseEntity.ok(response);
-	}
-	
+		
 	
 	@GetMapping("/dashboard")
     public ResponseEntity<OfficerDashboardDto> getDashboard(Principal principal) {
