@@ -22,7 +22,7 @@ public class OtpService implements IOtpService {
 
 	@Override
 	public boolean validateOtp(String email, String otp) {
-		String storedOtp = redisService.get(otp, String.class);
+		String storedOtp = redisService.get(email, String.class);
 		System.out.println("Otp here"+otp);
 		System.out.println(storedOtp);
 		return otp.equals(storedOtp);

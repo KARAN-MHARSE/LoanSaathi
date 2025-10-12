@@ -21,7 +21,7 @@ import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
-import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateRequestDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
 import com.aurionpro.loanapp.entity.Customer;
 import com.aurionpro.loanapp.entity.Document;
@@ -159,7 +159,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 						ObjectUtils.asMap("folder", "loan_documents", "resource_type", "auto"));
 				String url = uploadResult.get("secure_url").toString();
 
-				String name = document.getFile().getOriginalFilename();
+				String name = document.getFile().getOriginalFilename()+System.currentTimeMillis();
 				
 				Document doc = new Document();
 				doc.setLoanApplication(loanApplication);
@@ -183,7 +183,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	
 	@Override
 	@Transactional
-	public LoanApplicationResponseDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateRequestDto request) {
+	public LoanApplicationStatusUpdateDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateDto request) {
 		Officer officer = officerRepository.findByUserEmail(officerEmail).orElseThrow(
 				() -> new ResourceNotFoundException("Officer not found with email " + officerEmail));
 		
@@ -194,13 +194,13 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 
 		loanApplication.setApplicationStatus(request.getNewLoanApplicationStatus());
 		loanApplication.setAssignedOfficer(officer);
-
+		loanApplication.setRemark(request.getRemark());
 		LoanApplication updatedApplication = loanApplicationRepository.save(loanApplication);
 
 		if (request.getNewLoanApplicationStatus().equals(LoanApplicationStatus.APPROVED)) {
 			createLoanFromApplication(updatedApplication);
 		}
-		return mapper.map(updatedApplication, LoanApplicationResponseDto.class);
+		return request;
 	}
 
 	@Transactional
@@ -325,6 +325,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		
 		return mapper.map(appln, LoanApplicationDto.class);
 	}
+<<<<<<< HEAD
 
 	// Officer
 	
@@ -356,4 +357,6 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	    Page<Officer> page = officerRepository.findByIsActiveTrue(PageRequest.of(index, 1));
 	    return page.hasContent() ? page.getContent().get(0) : null;
 	}
+=======
+>>>>>>> karan
 }

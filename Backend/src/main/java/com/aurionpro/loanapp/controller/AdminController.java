@@ -1,11 +1,11 @@
 package com.aurionpro.loanapp.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.loanapp.dto.auth.RegisterRequestDto;
+import com.aurionpro.loanapp.dto.auth.RegisterResponseDto;
 import com.aurionpro.loanapp.dto.eligibility.EligibilityRequestDto;
 import com.aurionpro.loanapp.service.IEligibilityService;
 import com.aurionpro.loanapp.service.IOfficerService;
@@ -33,22 +34,22 @@ public class AdminController {
 	IEligibilityService eligibilityService;
 	
 	//Add Officer
-	@PostMapping("/add/officer")
+	@PostMapping("/officer")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<Void> addOfficer(
-			@RequestBody @Valid RegisterRequestDto requestDto, LocalDate date
+	public ResponseEntity<RegisterResponseDto> addOfficer(
+			@RequestBody @Valid RegisterRequestDto requestDto
 			){
 		
-		officerService.addOfficer(requestDto,date);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		RegisterResponseDto respone=officerService.addOfficer(requestDto);
+		return new ResponseEntity<RegisterResponseDto>(respone,HttpStatus.CREATED);
 	}
 	
 	//remove officer
-	@PostMapping("/remove/officer")
+	@DeleteMapping("/officer")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> removeOfficer(@RequestParam @Valid String empId){
 		officerService.removeOfficer(empId);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
 	//add eligibility for loan scheme

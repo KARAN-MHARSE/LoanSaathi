@@ -21,8 +21,10 @@ public class RedisService implements IRedisService{
 
 	@Override
 	public <T> T get(String key, Class<T> entityClass) {
-		Object object = redisTemplate.opsForValue().get("civib58005@gddcorp.com");
-		System.out.println("From redisService"+object.toString());
+		System.out.println(key);
+		Object object = redisTemplate.opsForValue().get(key);
+		System.out.println(object);
+//		System.out.println("From redisService"+object.toString());
 		if(object==null) return null;
 		return entityClass.cast(object);
 	}

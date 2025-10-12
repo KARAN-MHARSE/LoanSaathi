@@ -2,7 +2,10 @@ package com.aurionpro.loanapp.service;
 
 import java.util.List;
 
+<<<<<<< HEAD
 //import com.aurionpro.loanapp.dto.InstallmentDto;
+=======
+>>>>>>> karan
 import com.aurionpro.loanapp.dto.RepaymentRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationResponseDto;
