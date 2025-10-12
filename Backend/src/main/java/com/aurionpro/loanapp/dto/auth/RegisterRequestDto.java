@@ -33,8 +33,5 @@ public class RegisterRequestDto {
 	private String password;
 
 	@NotNull
-	private RoleType roleName;
-
-	@NotNull
 	private AuthProvider authProvider;
 }

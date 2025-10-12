@@ -32,9 +32,12 @@ public class EligibilityServiceImpl implements IEligibilityService {
 
 	@Override
 	public void addEligibility(@Valid EligibilityRequestDto eligibilityDto) {
-		// Fetch the loan scheme
 		LoanScheme loanScheme = loanSchemeRepository.findById(eligibilityDto.getLoanSchemeId()).orElseThrow(
 				() -> new RuntimeException("Loan scheme not found with id: " + eligibilityDto.getLoanSchemeId()));
+		
+		if(eligibilityRepository.existsByName(eligibilityDto.getName())) {
+			throw new RuntimeException("Eligibilty already present in loan scheme");
+		}
 		boolean isDuplicate = loanScheme.getEligibilities().stream()
 			    .anyMatch(e ->
 			        Objects.equals(e.getName(), eligibilityDto.getName()) &&

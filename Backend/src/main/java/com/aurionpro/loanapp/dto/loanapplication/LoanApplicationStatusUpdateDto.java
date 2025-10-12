@@ -1,11 +1,16 @@
 	package com.aurionpro.loanapp.dto.loanapplication;
 	
 	import com.aurionpro.loanapp.property.LoanApplicationStatus;
-	
-	import lombok.Data;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 	
 	@Data
-	public class LoanApplicationStatusUpdateRequestDto {
+	public class LoanApplicationStatusUpdateDto {
+		@NotNull
 		private Long applicationId;
+		@NotNull
 		private LoanApplicationStatus newLoanApplicationStatus;
+		@NotNull
+		private String remark;
 	}

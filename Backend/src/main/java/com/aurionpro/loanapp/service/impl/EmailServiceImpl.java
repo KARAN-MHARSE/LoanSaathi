@@ -3,6 +3,7 @@ package com.aurionpro.loanapp.service.impl;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.aurionpro.loanapp.dto.EmailDto;
@@ -19,6 +20,7 @@ public class EmailServiceImpl implements EmailService {
 	private final JavaMailSender javaMailSender;
 	
 	@Override
+	@Async
 	public void sendEmailWithImage(EmailDto emailDto) throws MessagingException{
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		
@@ -38,6 +40,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendEmailWithoutImage(EmailDto emailDto) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		

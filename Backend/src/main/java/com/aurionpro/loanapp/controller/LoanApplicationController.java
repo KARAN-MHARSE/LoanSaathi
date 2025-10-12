@@ -61,8 +61,9 @@ public class LoanApplicationController {
 			@RequestParam("documents") List<MultipartFile> files, @RequestParam("types") List<String> types,
 			Principal principal) throws IOException {
 
-		System.out.println("hii");
+		
 		if (files.size() != types.size()) {
+			System.out.println("No files");
 			return ResponseEntity.badRequest().build();
 		}
 

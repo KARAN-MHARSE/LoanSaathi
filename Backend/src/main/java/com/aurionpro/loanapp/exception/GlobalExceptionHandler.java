@@ -45,14 +45,14 @@ public class GlobalExceptionHandler {
 	
 	
 	
-	@ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
-		ErrorResponseDto errorResponse = new ErrorResponseDto();
-		errorResponse.setMessage(exception.getMessage());
-		errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-		errorResponse.setSuccess(false);
-		errorResponse.setTimestamp(LocalDateTime.now());
-		return new ResponseEntity<ErrorResponseDto>(errorResponse,HttpStatus.BAD_REQUEST);
-    }
+//	@ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
+//		ErrorResponseDto errorResponse = new ErrorResponseDto();
+//		errorResponse.setMessage(exception.getMessage());
+//		errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//		errorResponse.setSuccess(false);
+//		errorResponse.setTimestamp(LocalDateTime.now());
+//		return new ResponseEntity<ErrorResponseDto>(errorResponse,HttpStatus.BAD_REQUEST);
+//    }
 
 }
