@@ -162,7 +162,11 @@
 			<version>2.2.0</version> <!-- latest stable -->
 		</dependency>
 
->>>>>>> karan
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.13.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -58,7 +58,7 @@ public class User implements UserDetails {
 
 	private LocalDate dateOfBirth;
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 //	@Column(name = "is_deleted", nullable = false)
 //	private boolean isDeleted = false;
 =======

@@ -2,10 +2,10 @@ package com.aurionpro.loanapp.service;
 
 import java.util.List;
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 //import com.aurionpro.loanapp.dto.InstallmentDto;
-=======
->>>>>>> karan
+=========
+>>>>>>>>> Temporary merge branch 2
 import com.aurionpro.loanapp.dto.RepaymentRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationRequestDto;
 import com.aurionpro.loanapp.dto.emi.EmiCalculationResponseDto;

@@ -34,7 +34,10 @@ public class EligibilityServiceImpl implements IEligibilityService {
 	public void addEligibility(@Valid EligibilityRequestDto eligibilityDto) {
 		LoanScheme loanScheme = loanSchemeRepository.findById(eligibilityDto.getLoanSchemeId()).orElseThrow(
 				() -> new RuntimeException("Loan scheme not found with id: " + eligibilityDto.getLoanSchemeId()));
-<<<<<<< HEAD
+		
+		if(eligibilityRepository.existsByName(eligibilityDto.getName())) {
+			throw new RuntimeException("Eligibilty already present in loan scheme");
+		}
 		boolean isDuplicate = loanScheme.getEligibilities().stream()
 			    .anyMatch(e ->
 			        Objects.equals(e.getName(), eligibilityDto.getName()) &&
@@ -51,12 +54,12 @@ public class EligibilityServiceImpl implements IEligibilityService {
 			    );
 			}
 		
-=======
+=========
 		
 		if(eligibilityRepository.existsByName(eligibilityDto.getName())) {
 			throw new RuntimeException("Eligibilty already present in loan scheme");
 		}
->>>>>>> karan
+>>>>>>>>> Temporary merge branch 2
 
 		Eligibility eligibility = Eligibility.builder()
 				.name(eligibilityDto.getName())
