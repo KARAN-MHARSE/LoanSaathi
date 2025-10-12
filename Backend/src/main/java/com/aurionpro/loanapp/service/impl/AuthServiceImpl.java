@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -94,6 +95,7 @@ public class AuthServiceImpl implements IAuthService {
 			LoginResponseDto response = new LoginResponseDto();
 			response.setUsername(user.getEmail());
 			response.setToken(token);
+			response.setRole(user.getRole().getRoleName());
 			return response;
 		}
 		Authentication authentication = authenticationManager
@@ -104,6 +106,11 @@ public class AuthServiceImpl implements IAuthService {
 		LoginResponseDto response = new LoginResponseDto();
 		response.setUsername(authentication.getName());
 		response.setToken(token);
+		response.setRole(authentication.getAuthorities().stream()
+				.findFirst()
+				.map(g -> RoleType.valueOf(g.getAuthority()))
+				.orElse(null)
+				);
 
 		return response;
 

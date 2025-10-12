@@ -44,11 +44,12 @@ public class AuthController {
 	
 	@GetMapping("/send-otp")
 	public ResponseEntity<?> sendEmailValidationOtp(@RequestParam String email){
+		System.out.println(email);
 		authService.sendEmailValidateOtp(email);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@GetMapping("/validate-otp")
+	@PostMapping("/validate-otp")
 	public ResponseEntity<Boolean> validateOtp(@RequestBody OtpDto requestDto) {
 		System.out.println(requestDto.getCode());
 		boolean isValid = otpService.validateOtp(requestDto.getEmail(), requestDto.getCode());
