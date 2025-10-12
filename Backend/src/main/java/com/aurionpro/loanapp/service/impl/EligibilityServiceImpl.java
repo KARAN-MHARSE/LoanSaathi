@@ -53,13 +53,6 @@ public class EligibilityServiceImpl implements IEligibilityService {
 			            eligibilityDto.getLoanSchemeId())
 			    );
 			}
-		
-=========
-		
-		if(eligibilityRepository.existsByName(eligibilityDto.getName())) {
-			throw new RuntimeException("Eligibilty already present in loan scheme");
-		}
->>>>>>>>> Temporary merge branch 2
 
 		Eligibility eligibility = Eligibility.builder()
 				.name(eligibilityDto.getName())

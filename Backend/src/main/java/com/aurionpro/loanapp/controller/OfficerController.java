@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
-import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateDto;
 import com.aurionpro.loanapp.dto.officer.OfficerDashboardDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
@@ -46,6 +45,16 @@ public class OfficerController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/applications/approved")
+	public ResponseEntity<PageResponseDto<LoanApplicationDto>> getApprovedApplicationsOfOfficer(Principal principal,
+			@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
+		PageResponseDto<LoanApplicationDto> response = loanApplicationService
+				.getApprovedApplicationsOfOfficer(principal.getName(), pageNumber, pageSize);
+
+		return ResponseEntity.ok(response);
+	}
+	
 	
 	@GetMapping("/dashboard")
     public ResponseEntity<OfficerDashboardDto> getDashboard(Principal principal) {

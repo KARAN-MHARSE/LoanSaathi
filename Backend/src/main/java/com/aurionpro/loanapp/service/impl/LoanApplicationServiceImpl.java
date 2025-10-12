@@ -1,5 +1,6 @@
 package com.aurionpro.loanapp.service.impl;
 
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,11 +10,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.security.core.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.aurionpro.loanapp.dto.EmailDto;
@@ -275,6 +276,23 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
         
         return response;
 	}
+	
+	public PageResponseDto<LoanApplicationDto> getApprovedApplicationsOfOfficer(String officerEmail, int pageNumber, int pageSize){
+		User officerUser = userRepository.findByEmail(officerEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Officer not found with username: " + officerEmail));
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<LoanApplication> applicationPage= loanApplicationRepository.findAllByApplicationStatusAndAssignedOfficerId(LoanApplicationStatus.APPROVED,officerUser.getId(),pageable);
+        
+        List<LoanApplicationDto> applications= applicationPage.getContent().stream()
+        .map(application-> mapper.map(application, LoanApplicationDto.class))
+        .collect(Collectors.toList());
+        
+        PageResponseDto<LoanApplicationDto> response = mapper.map(applicationPage,PageResponseDto.class);
+        response.setContent(applications);
+        
+        return response;
+	}
 
 	@Override
 	public LoanApplicationResponseDto getApplicationById(Long applicationId, Authentication authentication) {
@@ -325,27 +343,8 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		
 		return mapper.map(appln, LoanApplicationDto.class);
 	}
-<<<<<<< HEAD
 
-	// Officer
-	
-	@Override
-	public void approveApplication(String applicationId) {
-		// TODO Auto-generated method stub
-		LoanApplication appln = loanApplicationRepository.findByApplicationId(applicationId).
-				orElseThrow(()-> new ResourceNotFoundException("Application not found"));
-		appln.setApplicationStatus(LoanApplicationStatus.APPROVED);
-		loanApplicationRepository.save(appln);
-		
-		createLoanFromApplication(appln);
-		
-	}
 
-	@Override
-	public void rejectApplication(String applicationId, LoanApplicationStatus applicationStatus) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	private Officer getRandomLoanOfficer() {
 	    long count = officerRepository.count(); // Get total number of LoanOfficers
@@ -357,6 +356,5 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	    Page<Officer> page = officerRepository.findByIsActiveTrue(PageRequest.of(index, 1));
 	    return page.hasContent() ? page.getContent().get(0) : null;
 	}
-=======
->>>>>>> karan
+
 }
