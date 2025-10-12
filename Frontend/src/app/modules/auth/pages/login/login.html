@@ -1,1 +1,38 @@
-<p>login works!</p>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-left">
+      <div class="logo">LoanSaathi</div>
+      <h1>Welcome Back</h1>
+      <p class="lead">Sign in with your registered email and password to continue.</p>
+
+      <form (ngSubmit)="login()" [formGroup]="loginForm">
+        <div class="field">
+          <label>Email address</label>
+          <input type="email" formControlName="email" placeholder="you@example.com" />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" formControlName="password" placeholder="••••••••" />
+        </div>
+
+        <button (click)="login()" class="btn btn-primary" type="button">
+          Login
+        </button>
+
+        <p class="small">
+          Don’t have an account? <a routerLink="/auth/register">Register</a>
+        </p>
+      </form>
+    </div>
+
+    <div class="auth-right">
+      <h2>Why choose LoanSaathi?</h2>
+      <ul>
+        <li>Easy, transparent, and quick loan processing.</li>
+        <li>Secure data handling with verified partners.</li>
+        <li>Personalized recommendations for every customer.</li>
+      </ul>
+    </div>
+  </div>
+</div>

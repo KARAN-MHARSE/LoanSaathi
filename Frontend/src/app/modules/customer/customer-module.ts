@@ -12,6 +12,7 @@ import { ViewInstallments } from './pages/view-installments/view-installments';
 import { Payment } from './pages/payment/payment';
 import { Profile } from './pages/profile/profile';
 import { CheckEligibility } from './pages/check-eligibility/check-eligibility';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CheckEligibility } from './pages/check-eligibility/check-eligibility';
   ],
   imports: [
     CommonModule,
-    CustomerRoutingModule
+    CustomerRoutingModule,
+    RouterModule
   ]
 })
 export class CustomerModule { }

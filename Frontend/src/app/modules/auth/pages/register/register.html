@@ -1,1 +1,47 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+  <div class="field">
+    <label>First Name</label>
+    <input type="text" formControlName="firstName" placeholder="John" />
+  </div>
+
+  <div class="field">
+    <label>Last Name</label>
+    <input type="text" formControlName="lastName" placeholder="Doe" />
+  </div>
+
+  <div class="field">
+    <label>Email address</label>
+    <input type="email" formControlName="email" placeholder="you@example.com" />
+    <button type="button" class="btn btn-ghost" (click)="sendOtp()">Send OTP</button>
+  </div>
+
+  <div class="field" *ngIf="emailOtpSent">
+    <label>Enter Email OTP</label>
+    <input type="text" formControlName="emailOtp" placeholder="Enter OTP" />
+    <button type="button" class="btn btn-primary" (click)="verifyOtp()" [disabled]="emailOtpVerified">
+      Verify OTP
+    </button>
+    <div class="error" *ngIf="otpError">
+      <small>{{ otpError }}</small>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" formControlName="password" placeholder="••••••••" />
+  </div>
+
+  <div class="field">
+    <label>Confirm Password</label>
+    <input type="password" formControlName="confirmPassword" placeholder="••••••••" />
+  </div>
+
+  <button class="btn btn-primary" type="submit" [disabled]="!emailOtpVerified">
+    Register
+  </button>
+
+  <p class="small">Already have an account? <a routerLink="/login">Login</a></p>
+
+  <div class="note">{{ otpMessage }}</div>
+  <div *ngIf="otpTimer > 0 && !emailOtpVerified" class="note">OTP expires in: {{ otpTimer }}s</div>
+</form>

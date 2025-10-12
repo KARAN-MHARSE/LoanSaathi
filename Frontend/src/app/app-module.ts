@@ -6,10 +6,12 @@ import { App } from './app';
 import { Header } from './layout/header/header';
 import { Sidebar } from './layout/sidebar/sidebar';
 import { Footer } from './layout/footer/footer';
-import { Home } from './home/home';
 import { AboutUs } from './pages/about-us/about-us';
 import { NotFound } from './pages/not-found/not-found';
 import { ContactUs } from './pages/contact-us/contact-us';
+import { RouterModule } from '@angular/router';
+import { Home } from './pages/home/home';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     App,
@@ -23,7 +25,9 @@ import { ContactUs } from './pages/contact-us/contact-us';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    RouterModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
