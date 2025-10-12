@@ -60,6 +60,8 @@ public class User implements UserDetails {
 
 	@Column( nullable = false)
 	private boolean isActive = true;
+//	@Column(name = "is_deleted", nullable = false)
+//	private boolean isDeleted = false;
 
 	@Column(name = "auth_provider")
 	private AuthProvider authProvider;

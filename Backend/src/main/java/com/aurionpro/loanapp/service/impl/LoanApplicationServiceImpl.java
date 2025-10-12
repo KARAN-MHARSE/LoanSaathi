@@ -103,6 +103,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 
 	@Override
+	@Transactional
 	public LoanApplicationResponseDto submitLoanApplication(Long applicationId,String email) {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found with email id " + email));
@@ -118,6 +119,13 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 
 		loanApplication.setApplicationStatus(LoanApplicationStatus.PENDING);
 		
+//		Assigned the loan officer
+		Officer officer = getRandomLoanOfficer();
+		if(officer==null) {
+			throw new ResourceNotFoundException("No officers are available to assign application");
+		}
+		officer.getLoanApplications().add(loanApplication);
+		
 		EmailDto emailDto = new EmailDto();
 		emailDto.setTo(user.getEmail());
 		emailDto.setSubject("Loan Application Submitted Successfully");
@@ -131,7 +139,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		
 		emailService.sendEmailWithoutImage(emailDto);
 		
-//		Assigned the loan officer
+
 
 		loanApplication = loanApplicationRepository.save(loanApplication);
 

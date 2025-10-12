@@ -1,5 +1,6 @@
 package com.aurionpro.loanapp.entity;
 
+import com.aurionpro.loanapp.property.EligibilityCriteria;
 import com.aurionpro.loanapp.property.Operator;
 
 import jakarta.persistence.Column;
@@ -11,18 +12,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
 @Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Eligibility {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private EligibilityCriteria name;
     private String description;
     private String value;
 

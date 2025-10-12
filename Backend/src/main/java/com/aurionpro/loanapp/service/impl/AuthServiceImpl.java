@@ -203,7 +203,6 @@ public class AuthServiceImpl implements IAuthService {
 			GoogleIdToken idToken = verifier.verify(idTokenString);
 			return idToken;
 		} catch (Exception e) {
-
 			e.printStackTrace();
 			return null;
 		}

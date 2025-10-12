@@ -1,5 +1,7 @@
 package com.aurionpro.loanapp.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aurionpro.loanapp.dto.eligibility.CheckEligibilityDto;
+import com.aurionpro.loanapp.dto.eligibility.EligibilityResponseDto;
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanscheme.LoanSchemeRequestDto;
 import com.aurionpro.loanapp.dto.loanscheme.LoanSchemeResponseDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
+import com.aurionpro.loanapp.entity.Eligibility;
+import com.aurionpro.loanapp.service.IEligibilityService;
 import com.aurionpro.loanapp.service.ILoanSchemeService;
 
 import jakarta.validation.Valid;
@@ -26,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoanSchemeController {
 	private final ILoanSchemeService loanSchemeService;
+	private final IEligibilityService eligibilityService;
 
 	
 	@PostMapping
@@ -69,4 +77,31 @@ public class LoanSchemeController {
 		return ResponseEntity.noContent().build();
 	}
 
+	// check eligibility for loanscheme
+		@PostMapping("/scheme/{schemeId}/check")
+		@PreAuthorize("hasRole('ADMIN')")
+		public ResponseEntity<String> checkEligibility(@Valid @RequestBody CheckEligibilityDto requestDto,@PathVariable Long schemeId) {
+
+			System.out.println("Into the check eligibility");
+			boolean isEligible = eligibilityService.checkEligibility(requestDto,schemeId);
+
+			if (isEligible) {
+				return ResponseEntity.ok("✅ Application is eligible for loan");
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("❌ Application is not eligible for loan");
+			}
+		}
+		
+		// get eligibility of loanscheme
+		@GetMapping("/scheme/{schemeId}/eligibilities")
+		@PreAuthorize("hasRole('ADMIN')")
+		public ResponseEntity<List<EligibilityResponseDto>> getEligibilities(@Valid @PathVariable Long schemeId) {
+
+			System.out.println("Into the check eligibility");
+			List<EligibilityResponseDto> res = eligibilityService.getEligibility(schemeId);
+
+		
+				return ResponseEntity.ok(res);
+		}
+		
 }

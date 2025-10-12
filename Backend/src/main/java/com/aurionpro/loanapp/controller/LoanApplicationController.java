@@ -87,19 +87,5 @@ public class LoanApplicationController {
 		LoanApplicationResponseDto applicationDTO = loanApplicationService.getApplicationById(applicationId, authentication);
         return ResponseEntity.ok(applicationDTO);
     }
-	
-
-	// check eligibility for loanscheme
-	@PostMapping("/eligibility/check")
-	public ResponseEntity<String> checkEligibility(@Valid @RequestBody LoanApplicationRequestDto requestDto) {
-
-		boolean isEligible = eligibilityService.checkEligibility(requestDto);
-
-		if (isEligible) {
-			return ResponseEntity.ok("✅ Application is eligible for loan");
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("❌ Application is not eligible for loan");
-		}
-	}
 
 }

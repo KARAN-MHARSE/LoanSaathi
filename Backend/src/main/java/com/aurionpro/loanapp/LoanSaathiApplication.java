@@ -1,4 +1,4 @@
-	package com.aurionpro.loanapp;
+package com.aurionpro.loanapp;
 
 
 import org.springframework.boot.SpringApplication;

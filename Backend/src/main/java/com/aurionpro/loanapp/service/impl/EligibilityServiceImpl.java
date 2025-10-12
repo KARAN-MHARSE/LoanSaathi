@@ -1,14 +1,19 @@
 package com.aurionpro.loanapp.service.impl;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.aurionpro.loanapp.dto.eligibility.CheckEligibilityDto;
 import com.aurionpro.loanapp.dto.eligibility.EligibilityRequestDto;
-import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
+import com.aurionpro.loanapp.dto.eligibility.EligibilityResponseDto;
 import com.aurionpro.loanapp.entity.Eligibility;
 import com.aurionpro.loanapp.entity.LoanScheme;
+import com.aurionpro.loanapp.exception.DuplicateResourceException;
 import com.aurionpro.loanapp.exception.ResourceNotFoundException;
 import com.aurionpro.loanapp.repository.EligibilityRepository;
 import com.aurionpro.loanapp.repository.LoanSchemeRepository;
@@ -23,6 +28,7 @@ public class EligibilityServiceImpl implements IEligibilityService {
 
 	private final EligibilityRepository eligibilityRepository;
 	private final LoanSchemeRepository loanSchemeRepository;
+	private final ModelMapper mapper;
 
 	@Override
 	public void addEligibility(@Valid EligibilityRequestDto eligibilityDto) {
@@ -32,6 +38,22 @@ public class EligibilityServiceImpl implements IEligibilityService {
 		if(eligibilityRepository.existsByName(eligibilityDto.getName())) {
 			throw new RuntimeException("Eligibilty already present in loan scheme");
 		}
+		boolean isDuplicate = loanScheme.getEligibilities().stream()
+			    .anyMatch(e ->
+			        Objects.equals(e.getName(), eligibilityDto.getName()) &&
+			        Objects.equals(e.getOperator(), eligibilityDto.getOperator()) &&
+			        Objects.equals(e.getLoanScheme().getId(), eligibilityDto.getLoanSchemeId())
+			    );
+
+			if (isDuplicate) {
+			    throw new DuplicateResourceException(
+			        String.format("Eligibility criteria '%s' with operator '%s' already exists for scheme ID %d",
+			            eligibilityDto.getName(),
+			            eligibilityDto.getOperator(),
+			            eligibilityDto.getLoanSchemeId())
+			    );
+			}
+		
 
 		Eligibility eligibility = Eligibility.builder()
 				.name(eligibilityDto.getName())
@@ -39,10 +61,12 @@ public class EligibilityServiceImpl implements IEligibilityService {
 				.value(eligibilityDto.getValue())
 				.operator(eligibilityDto.getOperator())
 				.loanScheme(loanScheme)
+				.isActive(true)
 				.build();
 
 		loanScheme.getEligibilities().add(eligibility);
-		eligibilityRepository.save(eligibility);
+		loanSchemeRepository.save(loanScheme);
+		//eligibilityRepository.save(eligibility);
 
 	}
 
@@ -58,17 +82,17 @@ public class EligibilityServiceImpl implements IEligibilityService {
 	}
 
 	@Override
-	public boolean checkEligibility(@Valid LoanApplicationRequestDto requestDto) {
-	    // 1. Fetch all eligibility rules for the given loan scheme
-		
-	    LoanScheme loanScheme= loanSchemeRepository.findById(requestDto.getLoanSchemeId())
+	public boolean checkEligibility(@Valid CheckEligibilityDto requestDto, Long loanSchemeId) {
+
+	    LoanScheme loanScheme= loanSchemeRepository.findById(loanSchemeId)
 	    		.orElseThrow(()->new ResourceNotFoundException("Loan Scheme Not Found"));
 	    List<Eligibility> rules = loanScheme.getEligibilities();
-
+	    System.out.println(rules);
 	    for (Eligibility rule : rules) {
 	    	if(!rule.isActive()) {
 	    		continue;
 	    	}
+	    	
 	        boolean passed = evaluateRule(requestDto, rule);
 
 	        if (!passed) {
@@ -79,19 +103,51 @@ public class EligibilityServiceImpl implements IEligibilityService {
 	    return true;
 	}
 	
-	private boolean evaluateRule(LoanApplicationRequestDto dto, Eligibility rule) {
+	private boolean evaluateRule(CheckEligibilityDto dto, Eligibility rule) {
 	    try {
-	        Field field = LoanApplicationRequestDto.class.getDeclaredField(rule.getName());
-	        field.setAccessible(true);
+	    	Object actualValue = dto.getCriteriaValues().entrySet().stream()
+	    	        .filter(e -> e.getKey().equalsIgnoreCase(rule.getName().toString()))
+	    	        .map(Map.Entry::getValue)
+	    	        .findFirst()
+	    	        .orElse(null);
 
-	        Object actualValue = field.get(dto);
 	        String expectedValue = rule.getValue();
 
-	        return rule.getOperator().evaluate(actualValue, expectedValue);
+	        System.out.println("Evaluating rule -> " + rule.getName().toString()
+	                + " | Operator: " + rule.getOperator()
+	                + " | Expected: " + expectedValue
+	                + " | Actual: " + actualValue);
+
+	        if (actualValue == null) {
+	            System.out.println("❌ Missing value for " + rule.getName());
+	            return false;
+	        }
+
+	        boolean result = rule.getOperator().evaluate(actualValue, expectedValue);
+
+	        System.out.println("✅ Rule result for " + rule.getName() + " = " + result);
+	        return result;
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return false;
 	    }
 	}
+
+
+	@Override
+	public List<EligibilityResponseDto> getEligibility(@Valid Long schemeId) {
+		// TODO Auto-generated method stub
+		LoanScheme loanScheme= loanSchemeRepository.findById(schemeId)
+	    		.orElseThrow(()->new ResourceNotFoundException("Loan Scheme Not Found"));
+	    List<Eligibility> rules = loanScheme.getEligibilities();
+	    
+	    List<EligibilityResponseDto> res = new ArrayList<>();
+	    for(Eligibility rule:rules) {
+	    	res.add(mapper.map(rule,EligibilityResponseDto.class));
+	    }
+		return res;
+	}
+
 
 }

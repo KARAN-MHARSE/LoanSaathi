@@ -64,7 +64,7 @@ public class LoanApplication {
 	
 //	Relations
 
-	@ManyToOne
+	@ManyToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	

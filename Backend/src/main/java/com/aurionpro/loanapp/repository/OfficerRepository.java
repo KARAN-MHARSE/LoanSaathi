@@ -2,6 +2,8 @@ package com.aurionpro.loanapp.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.aurionpro.loanapp.entity.Officer;
@@ -14,4 +16,6 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
 	boolean existsByUserEmail(String email);
 
 	Optional<Officer> findByEmployeeId(@Valid String empId);
+
+	Page<Officer> findByIsActiveTrue(PageRequest of);
 }
