@@ -17,18 +17,28 @@ import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 
 public interface ILoanApplicationService {
-    LoanApplicationResponseDto applyForLoan(LoanApplicationRequestDto applicationRequestDto, String customerEmail);
-    LoanApplicationResponseDto submitLoanApplication(Long applicationId,String email);
-    LoanApplicationResponseDto uploadDocuments(Long applicationId, List<DocumentUploadRequestDto> documents) throws IOException;
-	public LoanApplicationStatusUpdateDto updateApplicationStatus(String officerEmail,LoanApplicationStatusUpdateDto request);
+	LoanApplicationResponseDto applyForLoan(LoanApplicationRequestDto applicationRequestDto, String customerEmail);
 
+	LoanApplicationResponseDto submitLoanApplication(Long applicationId, String email);
 
-    List<LoanApplicationDto> getApplicationsForCurrentUser(String email);
-    LoanApplicationDto getApplicationStatus(String applicationId);
+	LoanApplicationResponseDto uploadDocuments(Long applicationId, List<DocumentUploadRequestDto> documents)
+			throws IOException;
+
+	public LoanApplicationStatusUpdateDto updateApplicationStatus(String officerEmail,
+			LoanApplicationStatusUpdateDto request);
+
+	List<LoanApplicationDto> getApplicationsForCurrentUser(String email);
+
+	LoanApplicationDto getApplicationStatus(String applicationId);
 
 //    Officer (User from authentication)
-	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize);
-//    void requestAdditionalDocuments(String applicationId, DocumentRequestDto documentRequestDto);
+	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,
+			int pageSize);
+
+	PageResponseDto<LoanApplicationDto> getApprovedApplicationsOfOfficer(String officerEmail, int pageNumber, int pageSize);
+
+	// void requestAdditionalDocuments(String applicationId, DocumentRequestDto
+	// documentRequestDto);
 //
 //
 //    List<LoanApplicationDto> getAllApplications(String statusFilter, int page, int size);
