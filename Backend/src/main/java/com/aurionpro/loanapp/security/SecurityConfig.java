@@ -1,4 +1,5 @@
 package com.aurionpro.loanapp.security;
+
 import java.security.Security;
 
 import org.springframework.context.annotation.Bean;
@@ -24,36 +25,29 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	private final CustomUserDetailService userDetailService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf(csrf-> csrf.disable())
-			.authorizeHttpRequests(auth-> auth
-				.requestMatchers("/api/v1/auth/**").permitAll()
-				.requestMatchers(
-				        "/v3/api-docs/**",
-				        "/swagger-ui/**",
-				        "/swagger-ui/index.html",
-				        "/swagger-ui.html"
-				    ).permitAll()
-				.anyRequest().authenticated())
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.httpBasic();
+		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**")
+				.permitAll()
+				.requestMatchers("/api/v1/loan-schemes/scheme/{schemeId}/check",
+						"/api/v1/loan-schemes/scheme/{schemeId}/eligibilities\r\n")
+				.permitAll()
+				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html", "/swagger-ui.html")
+				.permitAll().anyRequest().authenticated())
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).httpBasic();
 		return http.build();
 	}
 
-	
-	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
-	
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 }

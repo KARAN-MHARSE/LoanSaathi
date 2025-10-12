@@ -79,7 +79,6 @@ public class LoanSchemeController {
 
 	// check eligibility for loanscheme
 		@PostMapping("/scheme/{schemeId}/check")
-		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<String> checkEligibility(@Valid @RequestBody CheckEligibilityDto requestDto,@PathVariable Long schemeId) {
 
 			System.out.println("Into the check eligibility");
@@ -94,7 +93,6 @@ public class LoanSchemeController {
 		
 		// get eligibility of loanscheme
 		@GetMapping("/scheme/{schemeId}/eligibilities")
-		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<List<EligibilityResponseDto>> getEligibilities(@Valid @PathVariable Long schemeId) {
 
 			System.out.println("Into the check eligibility");

@@ -27,7 +27,7 @@ public class LoanController {
 	private final ILoanService loanService;
 
 	@GetMapping("/customer/{customerId}")
-	@PreAuthorize("hasAnyRole('CUSTOMER', 'OFFICER')")
+	@PreAuthorize("hasAnyRole('CUSTOMER', 'OFFICER','ADMIN')")
 	ResponseEntity<List<LoanResponseDto>> getLoans(@PathVariable Long customerId) {
 		List<LoanResponseDto> res = loanService.getLoansForCurrentUser(customerId);
 		return ResponseEntity.ok(res);
