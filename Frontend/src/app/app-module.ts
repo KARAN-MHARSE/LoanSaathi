@@ -11,7 +11,10 @@ import { NotFound } from './pages/not-found/not-found';
 import { ContactUs } from './pages/contact-us/contact-us';
 import { RouterModule } from '@angular/router';
 import { Home } from './pages/home/home';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { LoanProduct } from './pages/loan-product/loan-product';
+import { AuthInterceptor } from './shared/interceptor/auth.interceptor-interceptor';
+import { Unauthorized } from './pages/unauthorized/unauthorized';
 @NgModule({
   declarations: [
     App,
@@ -21,7 +24,9 @@ import { HttpClientModule } from '@angular/common/http';
     Home,
     AboutUs,
     NotFound,
-    ContactUs
+    ContactUs,
+    LoanProduct,
+    Unauthorized
   ],
   imports: [
     BrowserModule,
@@ -30,7 +35,12 @@ import { HttpClientModule } from '@angular/common/http';
     RouterModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:AuthInterceptor,
+      multi:true
+    }
   ],
   bootstrap: [App]
 })
