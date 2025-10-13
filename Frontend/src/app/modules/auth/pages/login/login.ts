@@ -23,7 +23,8 @@ export class Login {
   login(){
     this.authService.login(this.loginForm.value).subscribe({
       next:(res:LoginResponse)=>{
-        // Stored the user
+       this.authService.saveToken(res);
+
         if(res.role==="ROLE_CUSTOMER"){
           this.router.navigate(['/customer'])
         }else if(res.role==="ROLE_ADMIN"){

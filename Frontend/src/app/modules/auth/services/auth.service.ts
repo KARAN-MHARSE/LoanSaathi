@@ -20,15 +20,44 @@ export class AuthService {
   }
 
   validateEmailOtp(otpModel: OtpModel) {
-    return this.http.post(this.apiPath + "validate-otp",otpModel);
+    return this.http.post(this.apiPath + "validate-otp", otpModel);
   }
 
-  register(form:any){
-    return this.http.post(this.apiPath+"register",form)
+  register(form: any) {
+    return this.http.post(this.apiPath + "register", form)
   }
 
-  login(loginForm:any):Observable<LoginResponse>{
-    return this.http.post<LoginResponse>(this.apiPath+"login",loginForm)
+  login(loginForm: any): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.apiPath + "login", loginForm)
+  }
+
+  saveToken(res: LoginResponse) {
+    if (res.token) {
+      localStorage.setItem("token", res.token)
+
+      const dataPayload = res.token?.split('.')[1]
+      const data = JSON.parse(atob(dataPayload))
+      console.log(data)
+
+      let role = data.roles[0].authority;
+      console.log(role)
+
+      localStorage.setItem("role", role)
+      localStorage.setItem("email", data.sub)
+    }
+
+  }
+  getToken() {
+    return localStorage.getItem("token")
+  }
+
+  isAuthenticated() {
+    if(localStorage.getItem("role")) return true;
+    return false;
+  }
+
+  getUserRole() {
+    return localStorage.getItem("role")
   }
 }
 
