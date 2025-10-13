@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.loanapp.dto.eligibility.CheckEligibilityDto;
 import com.aurionpro.loanapp.dto.eligibility.EligibilityResponseDto;
-import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanscheme.LoanSchemeRequestDto;
 import com.aurionpro.loanapp.dto.loanscheme.LoanSchemeResponseDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
-import com.aurionpro.loanapp.entity.Eligibility;
 import com.aurionpro.loanapp.service.IEligibilityService;
 import com.aurionpro.loanapp.service.ILoanSchemeService;
 
