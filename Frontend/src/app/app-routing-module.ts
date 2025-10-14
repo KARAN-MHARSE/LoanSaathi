@@ -4,12 +4,15 @@ import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { LoginGuard } from './shared/guards/login.guard-guard';
 import { AuthGuard } from './shared/guards/auth.guard-guard';
 import { RoleGuard } from './shared/guards/role.guard-guard';
+import { LoanSchems } from './pages/loan-schems/loan-schems';
+import { AboutUs } from './pages/about-us/about-us';
+import { ContactUs } from './pages/contact-us/contact-us';
+import { Home } from './pages/home/home';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo:"auth",
-    pathMatch:'full'
+    component:Home
   },
   {
     path: 'auth',
@@ -45,7 +48,19 @@ const routes: Routes = [
   {
     path: "unauthorized",
     component: Unauthorized
-  }
+  },
+  {
+    path:"loan-schemes",
+    component:LoanSchems
+  },
+  {
+    path:"about",
+    component:AboutUs
+  },
+  {
+    path:"contact",
+    component:ContactUs
+  },
 ];
 
 @NgModule({

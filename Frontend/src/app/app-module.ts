@@ -12,9 +12,9 @@ import { ContactUs } from './pages/contact-us/contact-us';
 import { RouterModule } from '@angular/router';
 import { Home } from './pages/home/home';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { LoanProduct } from './pages/loan-product/loan-product';
 import { AuthInterceptor } from './shared/interceptor/auth.interceptor-interceptor';
 import { Unauthorized } from './pages/unauthorized/unauthorized';
+import { LoanSchems } from './pages/loan-schems/loan-schems';
 @NgModule({
   declarations: [
     App,
@@ -25,8 +25,8 @@ import { Unauthorized } from './pages/unauthorized/unauthorized';
     AboutUs,
     NotFound,
     ContactUs,
-    LoanProduct,
-    Unauthorized
+    Unauthorized,
+    LoanSchems
   ],
   imports: [
     BrowserModule,
