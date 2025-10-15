@@ -1,17 +1,16 @@
 package com.aurionpro.loanapp.dto.customer;
 
+import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor; // Changed to NoArgsConstructor for better compatibility
+
 import java.time.LocalDate;
 import java.util.List;
 
-import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class CustomerDashboard {
     private String firstName;
     private String lastName;
@@ -24,8 +23,14 @@ public class CustomerDashboard {
     private int pendingApplications;
     private int approvedApplications;
     private int rejectedApplications;
-    
-    private List<LoanApplicationDto> applications;
 
-  
+    private double totalLoanAmount;      
+    private double totalOutstandingAmount;
+    private double totalPaidAmount;        
+    private double nextEMIAmount;          
+    private LocalDate nextEMIDueDate;      
+    private int activeLoans;               
+    private int closedLoans;               
+
+    private List<LoanApplicationDto> applications;
 }

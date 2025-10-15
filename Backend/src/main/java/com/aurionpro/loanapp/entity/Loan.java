@@ -49,8 +49,8 @@ public class Loan {
     @Column(nullable = false)
     private BigDecimal emiAmount; 
     
-    @Column(nullable=false)
-    private BigDecimal outstandingAmount;
+//    @Column(nullable=false)
+//    private BigDecimal outstandingAmount;
     
     private LocalDateTime startDate;
     
@@ -76,20 +76,20 @@ public class Loan {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     
-    @PrePersist
-    public void setOutstandingAmountBeforeSave() {
-        // If not already set, calculate total payable amount
-        if (emiAmount != null && tenureMonths != null) {
-            this.outstandingAmount = emiAmount.multiply(BigDecimal.valueOf(tenureMonths));
-        } else if (loanAmount != null) {
-
-            this.outstandingAmount = loanAmount;
-        }
-    }
-    
-    public void makePayment(BigDecimal paymentAmount) {
-        this.outstandingAmount = this.outstandingAmount.subtract(paymentAmount);
-    }
+//    @PrePersist
+//    public void setOutstandingAmountBeforeSave() {
+//        // If not already set, calculate total payable amount
+//        if (emiAmount != null && tenureMonths != null) {
+//            this.outstandingAmount = emiAmount.multiply(BigDecimal.valueOf(tenureMonths));
+//        } else if (loanAmount != null) {
+//
+//            this.outstandingAmount = loanAmount;
+//        }
+//    }
+//    
+//    public void makePayment(BigDecimal paymentAmount) {
+//        this.outstandingAmount = this.outstandingAmount.subtract(paymentAmount);
+//    }
 
 }
 
