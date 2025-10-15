@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.aurionpro.loanapp.dto.customer.CustomerDashboard;
+import com.aurionpro.loanapp.dto.customer.CustomerProfile;
 import com.aurionpro.loanapp.dto.customer.CustomerProfileRequestDto;
 import com.aurionpro.loanapp.dto.customer.CustomerProfileResponseDto;
 import com.aurionpro.loanapp.entity.Customer;
@@ -136,4 +137,25 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	}
 
+	 @Transactional
+	    public CustomerProfile getCustomerProfile(String email) {
+		 
+	        Customer customer = customerRepository.findByUserEmail(email)
+	                .orElseThrow(() -> new ResourceNotFoundException("Customer profile not found for user: " + email));
+
+	        return new CustomerProfile(
+	                customer.getUser().getFirstName(),
+	                customer.getUser().getLastName(),
+	                customer.getUser().getEmail(),
+	                customer.getUser().getPhoneNumber(),
+	                customer.getUser().getDateOfBirth(),
+	                customer.getUser().getProfileUrl(),
+	                customer.getPanNumber(),
+	                customer.getAadhaarNumber(),
+	                customer.getOccupation(),
+	                customer.getAnnualIncome(),
+	                customer.getUser().getCreatedAt(),
+	                customer.getUser().isActive()
+	        );
+	    }
 }

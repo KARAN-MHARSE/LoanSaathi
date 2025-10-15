@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.loanapp.dto.customer.CustomerDashboard;
+import com.aurionpro.loanapp.dto.customer.CustomerProfile;
 import com.aurionpro.loanapp.dto.customer.CustomerProfileRequestDto;
 import com.aurionpro.loanapp.dto.customer.CustomerProfileResponseDto;
 import com.aurionpro.loanapp.service.ICustomerService;
@@ -39,6 +40,14 @@ public class CustomerController {
 	public ResponseEntity<CustomerDashboard> viewCustomerDashboard(Principal principal) {
 		String email = principal.getName();
 		CustomerDashboard response = customerService.viewCustomerDashboard(email);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/profile")
+	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
+	public ResponseEntity<CustomerProfile> viewCustomerProfile(Principal principal) {
+		String email = principal.getName();
+		CustomerProfile response = customerService.getCustomerProfile(email);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
