@@ -117,14 +117,13 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 			throw new AccessDeniedException("You are not authorized user");
 		}
 			
-
 		loanApplication.setApplicationStatus(LoanApplicationStatus.PENDING);
-		
 //		Assigned the loan officer
-		Officer officer = getRandomLoanOfficer();
+		Officer officer = officerRepository.findRandomActiveOfficer();
 		if(officer==null) {
 			throw new ResourceNotFoundException("No officers are available to assign application");
 		}
+		loanApplication.setAssignedOfficer(officer);
 		officer.getLoanApplications().add(loanApplication);
 		
 		EmailDto emailDto = new EmailDto();
@@ -141,7 +140,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		emailService.sendEmailWithoutImage(emailDto);
 		
 
-
+		officerRepository.save(officer);
 		loanApplication = loanApplicationRepository.save(loanApplication);
 
 		return mapper.map(loanApplication, LoanApplicationResponseDto.class);
@@ -348,18 +347,8 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 		
 		return mapper.map(appln, LoanApplicationDto.class);
 	}
-
-
 	
-	private Officer getRandomLoanOfficer() {
-	    long count = officerRepository.count(); // Get total number of LoanOfficers
-	    if (count == 0) {
-	        return null; // Or throw an exception if no officers
-	    }
-	    int index = (int) (Math.random() * count); // Random index
-	    // Get a random officer by using PageRequest
-	    Page<Officer> page = officerRepository.findByIsActiveTrue(PageRequest.of(index, 1));
-	    return page.hasContent() ? page.getContent().get(0) : null;
+	public Officer getRandomOfficer() {
+		return officerRepository.findRandomActiveOfficer();
 	}
-
 }
