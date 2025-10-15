@@ -1,1 +1,37 @@
-<p>header works!</p>
+<header class="main-header">
+  <div class="main-header__container">
+    
+    <a routerLink="/" class="main-header__logo">LoanSaathi</a>
+
+    <nav
+      class="main-header__nav"
+      [class.main-header__nav--active]="menuOpen"
+      aria-label="Main navigation"
+    >
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Home</a>
+      <a routerLink="loan-schemes" routerLinkActive="active" (click)="closeMenu()">Loans</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
+      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
+      <a
+        [routerLink]="isAuthenticated ? '/dashboard' : '/auth/login'"
+        class="main-header__cta-btn"
+        (click)="closeMenu()"
+      >
+        {{ isAuthenticated ? 'Dashboard' : 'Login' }}
+      </a>
+    </nav>
+
+    <button
+      class="main-header__menu-toggle"
+      (click)="toggleMenu()"
+      [class.main-header__menu-toggle--active]="menuOpen"
+      aria-label="Toggle menu"
+      [attr.aria-expanded]="menuOpen"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+</header>

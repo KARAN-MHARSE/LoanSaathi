@@ -1,0 +1,185 @@
+/***************************
+  Global Header Styling
+****************************/
+.main-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/***************************
+  Container
+****************************/
+.main-header__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/***************************
+  Logo
+****************************/
+.main-header__logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0062ff;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: color 0.3s ease;
+}
+
+.main-header__logo:hover {
+  color: #004dcc;
+}
+
+/***************************
+  Navigation Links
+****************************/
+.main-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  transition: all 0.3s ease;
+}
+
+.main-header__nav a {
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.main-header__nav a:hover,
+.main-header__nav a.active {
+  color: #0062ff;
+}
+
+/* Underline hover animation */
+.main-header__nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #0062ff;
+  transition: width 0.25s ease;
+}
+
+.main-header__nav a:hover::after,
+.main-header__nav a.active::after {
+  width: 100%;
+}
+
+/***************************
+  CTA Button (Login / Dashboard)
+****************************/
+.main-header__cta-btn {
+  background: linear-gradient(135deg, #0062ff, #1e90ff);
+  color: #fff !important;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 98, 255, 0.25);
+}
+
+.main-header__cta-btn:hover {
+  background: linear-gradient(135deg, #004dcc, #0062ff);
+  transform: translateY(-2px);
+}
+
+/***************************
+  Hamburger Menu
+****************************/
+.main-header__menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.3rem;
+  transition: all 0.3s ease;
+}
+
+.main-header__menu-toggle span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background-color: #333;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Animate hamburger into X */
+.main-header__menu-toggle--active span:nth-child(1) {
+  transform: rotate(45deg) translateY(8px);
+}
+.main-header__menu-toggle--active span:nth-child(2) {
+  opacity: 0;
+}
+.main-header__menu-toggle--active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-8px);
+}
+
+/***************************
+  Responsive Styles
+****************************/
+@media (max-width: 900px) {
+  .main-header__nav {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    flex-direction: column;
+    background-color: #fff;
+    width: 75%;
+    max-width: 300px;
+    padding: 2rem 1.5rem;
+    border-radius: 0 0 0 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .main-header__nav--active {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .main-header__menu-toggle {
+    display: flex;
+  }
+
+  .main-header__nav a {
+    padding: 0.7rem 0;
+    width: 100%;
+    text-align: right;
+  }
+
+  .main-header__cta-btn {
+    display: block;
+    margin-top: 1.2rem;
+    text-align: center;
+  }
+}
+
+/***************************
+  Scroll Effect (Optional)
+****************************/
+.main-header.scrolled {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background-color: #ffffffee;
+  backdrop-filter: blur(6px);
+}

@@ -9,14 +9,15 @@ import { Login } from './pages/login/login';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { LoaderComponent } from '../../shared/components/loader/loader';
 
 @NgModule({
   declarations: [
     Login,
     Register,
     ForgotPassword,
-    ResetPassword
+    ResetPassword,
+    LoaderComponent
   ],
   imports: [
     CommonModule,
