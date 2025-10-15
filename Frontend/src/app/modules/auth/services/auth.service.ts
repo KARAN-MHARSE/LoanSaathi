@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OtpModel } from '../../../core/model/Otp.model';
 import { LoginResponse } from '../model/LoginResponse.model';
+import { ForgotPasswordRequestModel } from '../model/ForgotPasswordRequest.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +30,23 @@ export class AuthService {
 
   login(loginForm: any): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.apiPath + "login", loginForm)
+  }
+
+  sendForgotPasswordOtp(email:any){
+    console.log(email.value)
+    return this.http.post(
+      this.apiPath+"forgot-password/send-otp",
+      email.value,
+      {
+        headers:{'Content-Type':'text/plain'},
+        responseType: 'text' as 'json'
+      })
+  }
+
+  validateOtpAndResetPassword(data:ForgotPasswordRequestModel):Observable<boolean>{
+    return this.http.post<boolean>(
+      this.apiPath+"forgot-password/reset",
+      data);
   }
 
   saveToken(res: LoginResponse) {

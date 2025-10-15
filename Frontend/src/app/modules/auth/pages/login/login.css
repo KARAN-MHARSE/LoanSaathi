@@ -184,3 +184,23 @@ input:focus {
     padding: 2.5rem 2rem;
   }
 }
+
+
+/* Forgot password */
+.forgot-password {
+  text-align: right;
+  margin-top: 6px;
+}
+
+.forgot-password a {
+  font-size: 0.9rem;
+  color: #0062ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+  color: #004bcc;
+  text-decoration: underline;
+}

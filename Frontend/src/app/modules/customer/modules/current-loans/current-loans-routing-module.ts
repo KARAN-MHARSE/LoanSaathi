@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MyLoans } from './pages/my-loans/my-loans';
 import { LoanDetails } from './pages/loan-details/loan-details';
-import { Payment } from './pages/payment/payment';
 
 const routes: Routes = [
   {
@@ -10,13 +9,9 @@ const routes: Routes = [
       component:MyLoans
     },
      {
-      path:"loans/:loanId",
+      path:":loanId",
       component:LoanDetails
-    },
-    {
-    path:"loans/:loanId/pay",
-    component:Payment
-  },
+    }
 
 ];
 

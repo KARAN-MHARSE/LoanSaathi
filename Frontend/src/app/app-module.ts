@@ -26,7 +26,7 @@ import { LoanSchems } from './pages/loan-schems/loan-schems';
     NotFound,
     ContactUs,
     Unauthorized,
-    LoanSchems
+    LoanSchems,
   ],
   imports: [
     BrowserModule,
