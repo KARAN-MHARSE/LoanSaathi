@@ -69,13 +69,9 @@ public class AuthController {
 	}
 	
 	@PostMapping("/forgot-password/reset")
-    public ResponseEntity<String> resetPassword(@RequestBody ForgotPasswordRequestDto request) {
+    public ResponseEntity<Boolean> resetPassword(@RequestBody ForgotPasswordRequestDto request) {
         boolean success = authService.forgotPassword(request);
-        if(success) {
-            return ResponseEntity.ok("Password reset successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("OTP verification failed.");
-        }
+        return ResponseEntity.ok(success);
     }
 	
 	@PostMapping("/google-login")
