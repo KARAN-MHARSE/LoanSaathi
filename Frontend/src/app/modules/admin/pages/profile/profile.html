@@ -22,7 +22,7 @@
         <h5 class="text-secondary mb-4">{{ profileForm.get('roleName')?.value }}</h5>
 
         <!-- Profile details form -->
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
+        <form  *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
           <div class="row gy-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">First Name</label>

@@ -17,31 +17,27 @@ interface UserProfile {
   selector: 'app-profile',
   standalone: false,
   templateUrl: './profile.html',
-  styleUrls: ['./profile.css']
+  styleUrls: ['./profile.css'],
 })
 export class Profile implements OnInit {
-
   profileForm!: FormGroup;
-  profileImagePreview: string = 'https://via.placeholder.com/150';
+  profileImagePreview: string = '/image.png';
   userData!: UserProfile;
   isModalOpen = false;
   selectedModalImageFile: File | null = null;
   modalImagePreview: string | null = null;
   selectedImageFile: File | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private adminProfileService: AdminProfileService
-  ) {}
+  constructor(private fb: FormBuilder, private adminProfileService: AdminProfileService) {}
   ngOnInit(): void {
-    const userEmail = localStorage.getItem('email'); 
+    const userEmail = localStorage.getItem('email');
     if (!userEmail) {
       alert('User email not found. Please log in again.');
       return;
     }
 
     // Fetch user data from backend
-    this.adminProfileService.getProfile(userEmail).subscribe({
+    this.adminProfileService.getProfile().subscribe({
       next: (data) => {
         this.userData = data;
         this.initializeForm();
@@ -52,10 +48,22 @@ export class Profile implements OnInit {
       error: (err) => {
         console.error('Error fetching user profile:', err);
         alert('Failed to load profile data.');
-      }
+      },
     });
 
-    this.adminProfileService.getProfilePicture()
+    this.adminProfileService.getProfilePicture().subscribe({
+      next: (response) => {
+        if (response && response.profileUrl) {
+          this.profileImagePreview = response.profileUrl;
+          console.log('Profile image loaded successfully:', response.profileUrl);
+        } else {
+          console.warn('No profile image found for user.');
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching profile image:', err);
+      },
+    });
   }
 
   initializeForm(): void {
@@ -63,11 +71,14 @@ export class Profile implements OnInit {
       id: [{ value: this.userData.id, disabled: true }],
       firstName: [this.userData.firstName, Validators.required],
       lastName: [this.userData.lastName, Validators.required],
-      email: [{ value: this.userData.email, disabled: true }, [Validators.required, Validators.email]],
+      email: [
+        { value: this.userData.email, disabled: true },
+        [Validators.required, Validators.email],
+      ],
       phoneNumber: [this.userData.phoneNumber],
       dateOfBirth: [this.userData.dateOfBirth],
       roleName: [{ value: this.userData.roleName, disabled: true }],
-      profileImage: [null]
+      profileImage: [null],
     });
   }
 
@@ -83,19 +94,27 @@ export class Profile implements OnInit {
     }
   }
 
-  updateProfilePic(): void {
-    if (this.selectedImageFile) {
-      alert('Profile picture updated (simulate)');
-      // TODO: this.adminProfileService.updateProfilePic(this.selectedImageFile).subscribe(...)
-    } else {
-      alert('Please select an image first');
-    }
-  }
+removeProfilePic(): void {
+  const formData = new FormData();
 
-  removeProfilePic(): void {
-    this.profileImagePreview = 'https://via.placeholder.com/150';
-    alert('Profile picture removed (simulate)');
-  }
+  this.adminProfileService.updateProfilePic(formData).subscribe({
+    next: (response) => {
+      // Update the preview with the default profile URL returned by backend
+      if (response.profileUrl) {
+        this.profileImagePreview = response.profileUrl;
+      } else {
+        // fallback to your placeholder
+        this.profileImagePreview = '/image.png';
+      }
+      alert('Profile picture removed successfully!');
+    },
+    error: (err) => {
+      alert('Failed to remove profile picture!');
+      console.error(err);
+    }
+  });
+}
+
 
   onSubmit(): void {
     if (this.profileForm.invalid) {
@@ -103,19 +122,21 @@ export class Profile implements OnInit {
       return;
     }
 
-    const formData = new FormData();
     const formValue = this.profileForm.getRawValue();
-    formData.append('firstName', formValue.firstName);
-    formData.append('lastName', formValue.lastName);
-    formData.append('phoneNumber', formValue.phoneNumber ?? '');
-    formData.append('dateOfBirth', formValue.dateOfBirth ?? '');
+    const updatePayload = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      phoneNumber: formValue.phoneNumber ?? '',
+      dateOfBirth: formValue.dateOfBirth ?? '',
+    };
 
-    if (formValue.profileImage) {
-      formData.append('profileImage', formValue.profileImage);
-    }
-
-    console.log('Form Data ready to send', formData);
-    alert('Profile updated successfully!');
+    this.adminProfileService.updateUserProfile(updatePayload).subscribe({
+      next: () => alert('Profile updated successfully!'),
+      error: (err) => {
+        alert('Failed to update profile!');
+        console.error(err);
+      },
+    });
   }
 
   openModal() {
@@ -144,8 +165,25 @@ export class Profile implements OnInit {
 
   confirmUpdateProfilePic() {
     if (!this.selectedModalImageFile) return;
-    this.profileImagePreview = this.modalImagePreview!;
-    this.closeModal();
-    alert('Profile picture updated successfully!');
+
+    const formData = new FormData();
+    formData.append('profileImage', this.selectedModalImageFile);
+
+    this.adminProfileService.updateProfilePic(formData).subscribe({
+      next: (response) => {
+        if (response.profileUrl) {
+          this.profileImagePreview = response.profileUrl;
+          window.location.reload(); // update preview with backend URL
+        } else {
+          this.profileImagePreview = this.modalImagePreview!; // fallback local preview
+        }
+        this.closeModal();
+        alert('Profile picture updated successfully!');
+      },
+      error: (err) => {
+        alert('Failed to update profile picture!');
+        console.error(err);
+      },
+    });
   }
 }
