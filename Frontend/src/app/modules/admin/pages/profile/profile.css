@@ -1,0 +1,25 @@
+.profile-wrapper {
+  background-color: #fff;
+  padding: 36px;
+  border-radius: 1rem;
+}
+
+.profile-img {
+  object-fit: cover;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #0d6efd;
+  transition: box-shadow 0.3s ease;
+}
+
+.profile-img:hover {
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.7);
+}
+
+.btn:focus {
+  box-shadow: 0 0 6pt 2pt rgba(13, 110, 253, 0.75);
+}
+
+.invalid-feedback {
+  font-size: 0.875em;
+}

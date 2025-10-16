@@ -1,1 +1,113 @@
-<p>profile works!</p>
+<div class="container mt-5">
+  <div class="profile-wrapper shadow rounded p-4 bg-white mx-auto" style="max-width: 900px;">
+    <div class="d-flex gap-4 align-items-start">
+      <!-- Left column: Image + buttons -->
+      <div class="text-center" style="min-width: 180px;">
+        <img
+          [src]="profileImagePreview"
+          alt="Profile Image"
+          class="profile-img rounded-circle border border-primary mb-3"
+          width="160"
+          height="160"
+        />
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-primary" (click)="openModal()">Update Image</button>
+          <button class="btn btn-outline-danger" (click)="removeProfilePic()">Delete Image</button>
+        </div>
+      </div>
+
+      <!-- Right column: Welcome & Role -->
+      <div class="flex-grow-1">
+        <h1 class="mb-1">Welcome, {{ profileForm.get('firstName')?.value }}!</h1>
+        <h5 class="text-secondary mb-4">{{ profileForm.get('roleName')?.value }}</h5>
+
+        <!-- Profile details form -->
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
+          <div class="row gy-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+                [class.is-invalid]="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+              />
+              <div class="invalid-feedback">First name is required.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+                [class.is-invalid]="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+              />
+              <div class="invalid-feedback">Last name is required.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Date of Birth</label>
+              <input type="date" class="form-control" formControlName="dateOfBirth" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Email</label>
+              <input type="email" class="form-control" formControlName="email" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Phone Number</label>
+              <input type="tel" class="form-control" formControlName="phoneNumber" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-4 px-5 fs-5">
+            Save Changes
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for updating profile pic -->
+  <div
+    class="modal fade"
+    id="profilePicModal"
+    tabindex="-1"
+    aria-labelledby="modalLabel"
+    aria-hidden="true"
+    [class.show]="isModalOpen"
+    [style.display]="isModalOpen ? 'block' : 'none'"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="modalLabel">Update Profile Picture</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img
+            [src]="modalImagePreview || profileImagePreview"
+            alt="Preview"
+            class="profile-img rounded-circle mb-3 shadow-sm"
+            width="160"
+            height="160"
+          />
+          <input class="form-control" type="file" accept="image/*" (change)="onModalImageSelected($event)" />
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!selectedModalImageFile"
+            (click)="confirmUpdateProfilePic()"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

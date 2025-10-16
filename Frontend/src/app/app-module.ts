@@ -1,20 +1,21 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing-module';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { App } from './app';
+import { AppRoutingModule } from './app-routing-module';
+import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
 import { Sidebar } from './layout/sidebar/sidebar';
-import { Footer } from './layout/footer/footer';
 import { AboutUs } from './pages/about-us/about-us';
-import { NotFound } from './pages/not-found/not-found';
 import { ContactUs } from './pages/contact-us/contact-us';
-import { RouterModule } from '@angular/router';
 import { Home } from './pages/home/home';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { AuthInterceptor } from './shared/interceptor/auth.interceptor-interceptor';
-import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { LoanSchems } from './pages/loan-schems/loan-schems';
+import { NotFound } from './pages/not-found/not-found';
+import { Unauthorized } from './pages/unauthorized/unauthorized';
+import { AuthInterceptor } from './shared/interceptor/auth.interceptor-interceptor';
 @NgModule({
   declarations: [
     App,
@@ -32,7 +33,9 @@ import { LoanSchems } from './pages/loan-schems/loan-schems';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

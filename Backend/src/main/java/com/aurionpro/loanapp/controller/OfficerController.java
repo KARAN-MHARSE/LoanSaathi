@@ -49,7 +49,6 @@ public class OfficerController {
 		return ResponseEntity.ok(response);
 	}
 
-
 	@GetMapping("/applications/assigned")
 	public ResponseEntity<PageResponseDto<LoanApplicationDto>> getAssignedApplicationsOfOfficer(Principal principal,
 			@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
@@ -58,9 +57,7 @@ public class OfficerController {
 
 		return ResponseEntity.ok(response);
 	}
-	
 		
-	
 	@GetMapping("/dashboard")
     public ResponseEntity<OfficerDashboardDto> getDashboard(Principal principal) {
         String officerEmail = principal.getName(); 
