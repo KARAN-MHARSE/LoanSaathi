@@ -3,16 +3,20 @@ package com.aurionpro.loanapp.controller;
 import java.security.Principal;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfileRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
+import com.aurionpro.loanapp.dto.user.UserProfileResponseDto;
 import com.aurionpro.loanapp.service.IUserService;
 
 import jakarta.validation.Valid;
@@ -39,5 +43,16 @@ public class UserController {
 
 		return ResponseEntity.ok(responseDto);
 	}
+	
+	@GetMapping("/profile")
+	public ResponseEntity<UserDto> getProfile(@Valid @RequestParam String email){
+		UserDto user = userService.getCurrentUserProfile(email);
+		return ResponseEntity.ok(user);
+	}
 
+	@GetMapping("/profile/pic")
+	public ResponseEntity<UserProfileResponseDto> getUserProfilePic(@Valid @RequestParam String email){
+		UserProfileResponseDto res = userService.getUserProfilePhoto(email);
+		return ResponseEntity.ok(res);
+	}
 }

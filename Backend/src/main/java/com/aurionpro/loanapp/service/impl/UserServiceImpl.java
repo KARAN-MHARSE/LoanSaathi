@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
+import com.aurionpro.loanapp.dto.user.UserProfileResponseDto;
 import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.exception.ResourceNotFoundException;
 import com.aurionpro.loanapp.property.UserStatus;
 import com.aurionpro.loanapp.repository.UserRepository;
 import com.aurionpro.loanapp.service.IUserService;
+import com.aurionpro.loanapp.util.DefaultProfileImageUtil;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -42,18 +45,25 @@ public class UserServiceImpl implements IUserService {
 		try {
 			User user = userRepository.findByEmail(email)
 					.orElseThrow(()-> new ResourceNotFoundException("User not found with email"+email));
+			 String profileUrl;
 
-			
-			Map uploadResult = cloudinary.uploader().upload(requestDto.getProfileImage().getBytes(),
-					ObjectUtils.asMap("folder", "loan_documents", "resource_type", "auto"));
-			
-			UpdateUserProfileResponseDto response = new UpdateUserProfileResponseDto();
-			String profileUrl = uploadResult.get("secure_url").toString();
-			response.setProfileUrl(profileUrl);
+		        // If no image is provided, set default
+		        if (requestDto.getProfileImage() == null || requestDto.getProfileImage().isEmpty()) {
+		            profileUrl = DefaultProfileImageUtil.getDefaultProfileUrl();
+		        } else {
+		            Map uploadResult = cloudinary.uploader().upload(
+		                requestDto.getProfileImage().getBytes(),
+		                ObjectUtils.asMap("folder", "loan_documents", "resource_type", "auto")
+		            );
+		            profileUrl = uploadResult.get("secure_url").toString();
+		        }
 			
 			user.setProfileUrl(profileUrl);
 			userRepository.save(user);
-			return response;
+			
+			UpdateUserProfileResponseDto response = new UpdateUserProfileResponseDto();
+	        response.setProfileUrl(profileUrl);
+	        return response;
 
 			
 		} catch (Exception e) {
@@ -96,6 +106,17 @@ public class UserServiceImpl implements IUserService {
 
 		   return mapper.map(updatedUser, UserDto.class);
 
+	}
+
+	@Override
+	public UserProfileResponseDto getUserProfilePhoto(@Valid String email) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findByEmail(email)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+		
+		UserProfileResponseDto res = new UserProfileResponseDto();
+		res.setProfileUrl(user.getProfileUrl());
+		return res;
 	}
 
 }
