@@ -29,6 +29,7 @@ import com.aurionpro.loanapp.security.JwtService;
 import com.aurionpro.loanapp.service.EmailService;
 import com.aurionpro.loanapp.service.IAuthService;
 import com.aurionpro.loanapp.service.IOtpService;
+import com.aurionpro.loanapp.util.DefaultProfileImageUtil;
 import com.aurionpro.loanapp.util.PasswordGenerator;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -72,6 +73,9 @@ public class AuthServiceImpl implements IAuthService {
 		User user = mapper.map(registerDto, User.class);
 		
 		user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+		
+		String profileUrl = DefaultProfileImageUtil.getDefaultProfileUrl();
+		user.setPhoneNumber(profileUrl);
 
 		Role role = roleRepository.findByRoleName(RoleType.ROLE_CUSTOMER)
 				.orElseThrow(() -> new RuntimeException("Role is not exist"));

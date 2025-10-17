@@ -6,7 +6,10 @@ import com.aurionpro.loanapp.dto.UpdateUserProfileResponseDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfilePhotoRequestDto;
 import com.aurionpro.loanapp.dto.user.UpdateUserProfileRequestDto;
 import com.aurionpro.loanapp.dto.user.UserDto;
+import com.aurionpro.loanapp.dto.user.UserProfileResponseDto;
 import com.aurionpro.loanapp.property.UserStatus;
+
+import jakarta.validation.Valid;
 
 public interface IUserService {
 	
@@ -17,5 +20,6 @@ public interface IUserService {
     List<UserDto> getAllUsers(String role, int page, int size, String sortBy);
     UserDto updateUserStatus(Long userId, UserStatus userStatus);
     UserDto updateUserProfile(String username,UpdateUserProfileRequestDto requestDto);
+	UserProfileResponseDto getUserProfilePhoto(@Valid String email);
     
 }

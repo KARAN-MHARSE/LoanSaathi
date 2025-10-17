@@ -1,1 +1,95 @@
-<p>dashboard works!</p>
+<div class="dashboard-container" *ngIf="customerDetails">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="profile">
+      <img [src]="customerDetails.profileUrl" alt="Profile" class="profile-img" />
+      <div>
+        <h2 class="name">{{ customerDetails.firstName }} {{ customerDetails.lastName }}</h2>
+        <p class="email">{{ customerDetails.email }}</p>
+        <p class="phone">{{ customerDetails.phoneNumber }}</p>
+      </div>
+    </div>
+    <div class="summary">
+      <p><strong>DOB:</strong> {{ customerDetails.dateOfBirth | date }}</p>
+      <p><strong>Active Loans:</strong> {{ customerDetails.activeLoans }}</p>
+      <p><strong>Closed Loans:</strong> {{ customerDetails.closedLoans }}</p>
+    </div>
+  </div>
+
+  <!-- Loan Summary Cards -->
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <h3>Total Applications</h3>
+      <p class="number">{{ customerDetails.totalApplications }}</p>
+    </div>
+    <div class="stat-card pending">
+      <h3>Pending</h3>
+      <p class="number">{{ customerDetails.pendingApplications }}</p>
+    </div>
+    <div class="stat-card approved">
+      <h3>Approved</h3>
+      <p class="number">{{ customerDetails.approvedApplications }}</p>
+    </div>
+    <div class="stat-card rejected">
+      <h3>Rejected</h3>
+      <p class="number">{{ customerDetails.rejectedApplications }}</p>
+    </div>
+  </div>
+
+  <!-- Financial Overview -->
+  <div class="financial-summary">
+    <h3>Financial Overview</h3>
+    <div class="finance-grid">
+      <div class="finance-item">
+        <span>Total Loan Amount</span>
+        <strong>₹{{ customerDetails.totalLoanAmount | number }}</strong>
+      </div>
+      <div class="finance-item">
+        <span>Total Paid Amount</span>
+        <strong>₹{{ customerDetails.totalPaidAmount | number }}</strong>
+      </div>
+      <div class="finance-item">
+        <span>Total Outstanding</span>
+        <strong>₹{{ customerDetails.totalOutstandingAmount | number }}</strong>
+      </div>
+      <div class="finance-item">
+        <span>Next EMI Amount</span>
+        <strong>₹{{ customerDetails.nextEMIAmount | number }}</strong>
+      </div>
+      <div class="finance-item">
+        <span>Next EMI Due Date</span>
+        <strong>{{ customerDetails.nextEMIDueDate | date }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Applications -->
+  <div class="applications">
+    <h3>Recent Loan Applications</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Loan ID</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Applied Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let app of customerDetails.applications">
+          <td>{{ app.id}}</td>
+          <td>SECURED</td>
+          <td>₹{{ app.requiredAmount | number }}</td>
+          <!-- <td><span class="status" [ngClass]="app.applicationStatus?.toString().toLowerCase()">
+  {{ app.applicationStatus }}
+</span>
+</td> -->
+          <td>Active</td>
+
+          <td>{{ app.createdAt | date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

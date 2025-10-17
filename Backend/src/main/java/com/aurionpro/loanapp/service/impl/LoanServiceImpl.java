@@ -109,7 +109,6 @@ public class LoanServiceImpl implements ILoanService {
 	            addRow(table, "Start Date", loan.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 	            addRow(table, "End Date", loan.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 	            addRow(table, "Status", loan.getStatus().toString());
-	            addRow(table, "Outstanding Amount", String.valueOf(loan.getOutstandingAmount()));
 
 	            document.add(table);
 

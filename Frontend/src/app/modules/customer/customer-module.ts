@@ -9,12 +9,13 @@ import { ApplicationSubmit } from './modules/loan-application/pages/application-
 import { MyLoans } from './modules/current-loans/pages/my-loans/my-loans';
 import { LoanDetails } from './modules/current-loans/pages/loan-details/loan-details';
 import { ViewInstallments } from './pages/view-installments/view-installments';
-import { Payment } from './modules/current-loans/pages/payment/payment';
 import { Profile } from './pages/profile/profile';
 import { CheckEligibility } from './modules/loan-application/pages/check-eligibility/check-eligibility';
 import { RouterModule } from '@angular/router';
 import { AllApplications } from './modules/loan-application/pages/all-applications/all-applications';
 import { AppliedApplicationDetails } from './modules/loan-application/pages/applied-application-details/applied-application-details';
+import { Sidebar } from './components/sidebar/sidebar';
+import { CustomerLayout } from './customer-layout/customer-layout';
 
 
 @NgModule({
@@ -26,11 +27,12 @@ import { AppliedApplicationDetails } from './modules/loan-application/pages/appl
     MyLoans,
     LoanDetails,
     ViewInstallments,
-    Payment,
     Profile,
     CheckEligibility,
     AllApplications,
-    AppliedApplicationDetails
+    AppliedApplicationDetails,
+    Sidebar,
+    CustomerLayout,
   ],
   imports: [
     CommonModule,

@@ -40,7 +40,7 @@
     Register
   </button>
 
-  <p class="small">Already have an account? <a routerLink="/login">Login</a></p>
+  <p class="small">Already have an account? <a routerLink="/auth/login">Login</a></p>
 
   <div class="note">{{ otpMessage }}</div>
   <div *ngIf="otpTimer > 0 && !emailOtpVerified" class="note">OTP expires in: {{ otpTimer }}s</div>
