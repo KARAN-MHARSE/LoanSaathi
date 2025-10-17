@@ -1,1 +1,84 @@
-<p>all-applications works!</p>
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Loan Applications Dashboard</h1>
+
+  <div class="filter-controls">
+    <div class="filter-group">
+      <label for="status-filter" class="filter-label">Filter by Status:</label>
+      <select
+        id="status-filter"
+        class="filter-select"
+        [(ngModel)]="selectedStatus"
+        (change)="applyFilters()"
+      >
+        <option value="ALL">All Status</option>
+        <option value="PENDING">PENDING</option>
+        <option value="APPROVED">APPROVED</option>
+        <option value="REJECTED">REJECTED</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="scheme-filter" class="filter-label">Filter by Scheme:</label>
+      <select
+        id="scheme-filter"
+        class="filter-select"
+        [(ngModel)]="selectedScheme"
+        (change)="applyFilters()"
+      >
+        <option value="ALL">All Schemes</option>
+        <option *ngFor="let scheme of schemeNames" [value]="scheme">{{ scheme }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div *ngIf="isLoading" class="loading-message">Loading applications...</div>
+
+    <table *ngIf="!isLoading" class="app-table">
+      <thead>
+        <tr>
+          <th class="table-header">Application ID</th>
+          <th class="table-header">Customer Name</th>
+          <th class="table-header">Loan Scheme</th>
+          <th class="table-header">Amount Required</th>
+          <th class="table-header">Status</th>
+          <th class="table-header"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let app of applications" (click)="goToDetails(app.id)" class="app-row">
+          <td class="app-id">{{ app.applicationId }}</td>
+          <td class="app-data">{{ app.customerName }}</td>
+          <td class="app-data">{{ app.loanSchemeName }}</td>
+          <td class="amount-required">₹{{ app.requiredAmount | number }}</td>
+          <td class="app-data">
+            <span
+              [ngClass]="{
+                'status-pending': app.applicationStatus === 'PENDING',
+                'status-approved': app.applicationStatus === 'APPROVED',
+                'status-rejected': app.applicationStatus === 'REJECTED'
+              }"
+              class="status-badge"
+            >
+              {{ app.applicationStatus }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <a
+              (click)="goToDetails(app.id); $event.stopPropagation()"
+              href="javascript:void(0)"
+              class="view-details-link"
+            >
+              View Details
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!isLoading && applications.length === 0" class="no-applications-message">
+      No loan applications match your current filters.
+    </div>
+  </div>
+</div>

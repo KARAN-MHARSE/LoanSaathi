@@ -1,1 +1,131 @@
-<p>application-details works!</p>
+<div class="details-page-container">
+  <div *ngIf="isLoading" class="loading-message">Loading application details...</div>
+
+  <div *ngIf="application && !isLoading">
+    <div class="details-header-section">
+      <h1 class="details-title">Application Details #{{ application.id }}</h1>
+      <span
+        [ngClass]="{
+          'status-pending': application.applicationStatus === LoanApplicationStatus.PENDING,
+          'status-approved': application.applicationStatus === LoanApplicationStatus.APPROVED,
+          'status-rejected': application.applicationStatus === LoanApplicationStatus.REJECTED
+        }"
+        class="status-badge-lg"
+      >
+        {{ application.applicationStatus }}
+      </span>
+    </div>
+
+    <div class="details-section">
+      <h2 class="section-title">Loan Information</h2>
+
+      <div class="details-grid">
+        <div class="data-card">
+          <div class="data-label">Loan Scheme</div>
+          <div class="data-value">{{ application.loanSchemeName }}</div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-label">Customer Name</div>
+          <div class="data-value">{{ application.customerName }}</div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-label">Required Amount</div>
+          <div class="data-value-highlight">₹{{ application.requiredAmount | number }}</div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-label">Loan Tenure (Months)</div>
+          <div class="data-value">{{ application.tenure }}</div>
+        </div>
+
+        <div class="data-card full-width">
+          <div class="data-label">Application Reason</div>
+          <div class="data-value">{{ application.reason }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h2 class="section-title">Applicant Financials</h2>
+
+      <div class="details-grid">
+        <div class="data-card">
+          <div class="data-label">Annual Income</div>
+          <div class="data-value">₹{{ application.annualIncome | number }}</div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-label">Occupation</div>
+          <div class="data-value">{{ application.occupation }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h2 class="section-title">Documents for Verification</h2>
+
+      <ul class="documents-list">
+        <li *ngFor="let doc of application.documents" class="document-item">
+          <div class="document-name">{{ doc.documentType }}</div>
+          <a [href]="doc.documentUrl" target="_blank" class="view-document-link"> View Document </a>
+        </li>
+      </ul>
+      <div *ngIf="application.documents?.length === 0" class="no-documents-message">
+        No documents have been uploaded for this application yet.
+      </div>
+    </div>
+
+    <div
+      *ngIf="application.applicationStatus === LoanApplicationStatus.PENDING"
+      class="action-buttons-container"
+    >
+      <button (click)="onReject()" class="reject-button">Reject Loan</button>
+
+      <button (click)="onApprove()" class="approve-button">Approve Loan</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showRejectModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 class="modal-title">Reject Loan Application</h3>
+    <p class="modal-message">
+      Please enter the reason for rejecting Loan Application #{{ application?.id }}:
+    </p>
+
+    <div *ngIf="showValidationError" class="validation-error-box">
+      A detailed rejection reason (at least 10 characters) is required.
+    </div>
+
+    <textarea
+      [(ngModel)]="rejectionReason"
+      class="rejection-textarea"
+      placeholder="Enter detailed rejection reason here..."
+    ></textarea>
+
+    <div class="modal-actions">
+      <button (click)="cancelReject()" class="modal-cancel-button">Cancel</button>
+      <button (click)="confirmReject()" class="modal-confirm-button reject-confirm-button">
+        Confirm Reject
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showApproveModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 class="modal-title approve-title">Approve Loan Application</h3>
+    <p class="modal-message">
+      Are you sure you want to **APPROVE** Loan Application #{{ application?.id }}?
+    </p>
+
+    <div class="modal-actions">
+      <button (click)="cancelApprove()" class="modal-cancel-button">No, Cancel</button>
+      <button (click)="confirmApprove()" class="modal-confirm-button approve-confirm-button">
+        Yes, Approve
+      </button>
+    </div>
+  </div>
+</div>

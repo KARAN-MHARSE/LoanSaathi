@@ -48,7 +48,7 @@ import com.aurionpro.loanapp.util.EmiCalculator;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -260,24 +260,31 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 
 	@Override
-	public PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize) {
+	@Transactional(readOnly = true)
+	public PageResponseDto<LoanApplicationResponseDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,int pageSize) {
 		User officerUser = userRepository.findByEmail(officerEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Officer not found with username: " + officerEmail));
 
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<LoanApplication> applicationPage= loanApplicationRepository.findByAssignedOfficerId(officerUser.getId(),pageable);
         
-        List<LoanApplicationDto> applications= applicationPage.getContent().stream()
-        .map(application-> mapper.map(application, LoanApplicationDto.class))
+        List<LoanApplicationResponseDto> applications= applicationPage.getContent().stream()
+        .map(application-> mapper.map(application, LoanApplicationResponseDto.class))
         .collect(Collectors.toList());
         
-        PageResponseDto<LoanApplicationDto> response = mapper.map(applicationPage,PageResponseDto.class);
+        PageResponseDto<LoanApplicationResponseDto> response = new PageResponseDto<>();
         response.setContent(applications);
+        response.setNumber(applicationPage.getNumber());
+        response.setSize(applicationPage.getSize());
+        response.setTotalElements(applicationPage.getTotalElements());
+        response.setTotalPages(applicationPage.getTotalPages());
+        response.setLast(applicationPage.isLast());
         
         return response;
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public PageResponseDto<LoanApplicationDto> getApplicationsOfOfficerByStatus(
 			String officerEmail,
 			LoanApplicationStatus status,
@@ -300,6 +307,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public LoanApplicationResponseDto getApplicationById(Long applicationId, Authentication authentication) {
 		    LoanApplication application = loanApplicationRepository.findById(applicationId)
 		            .orElseThrow(() -> new ResourceNotFoundException("Loan application not found with ID: " + applicationId));
@@ -324,6 +332,7 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<LoanApplicationDto> getApplicationsForCurrentUser(String email) {
 		// TODO Auto-generated method stub
 		User user = userRepository.findByEmail(email)
@@ -341,8 +350,9 @@ public class LoanApplicationServiceImpl implements ILoanApplicationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public LoanApplicationDto getApplicationStatus(String applicationId) {
-		// TODO Auto-generated method stub
+
 		LoanApplication appln = loanApplicationRepository.findByApplicationId(applicationId).
 				orElseThrow(()-> new ResourceNotFoundException("Application not found"));
 		

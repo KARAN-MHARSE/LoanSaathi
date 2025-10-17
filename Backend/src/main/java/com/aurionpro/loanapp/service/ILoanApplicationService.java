@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.aurionpro.loanapp.dto.dashboard.document.DocumentRequestDto;
 import com.aurionpro.loanapp.dto.dashboard.document.DocumentUploadRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationRequestDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationResponseDto;
 import com.aurionpro.loanapp.dto.loanapplication.LoanApplicationStatusUpdateDto;
 import com.aurionpro.loanapp.dto.page.PageResponseDto;
-import com.aurionpro.loanapp.entity.User;
 import com.aurionpro.loanapp.property.LoanApplicationStatus;
 
 public interface ILoanApplicationService {
@@ -32,7 +29,7 @@ public interface ILoanApplicationService {
 	LoanApplicationDto getApplicationStatus(String applicationId);
 
 //    Officer (User from authentication)
-	PageResponseDto<LoanApplicationDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,
+	PageResponseDto<LoanApplicationResponseDto> getAssignedApplicationsOfOfficer(String officerEmail, int pageNumber,
 			int pageSize);
 	// void requestAdditionalDocuments(String applicationId, DocumentRequestDto
 	// documentRequestDto);

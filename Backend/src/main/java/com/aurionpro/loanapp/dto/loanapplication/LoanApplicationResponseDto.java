@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class LoanApplicationResponseDto {
     private Long id;
+    private String applicationId;
     private BigDecimal requiredAmount;
     private BigDecimal annualIncome;
     private String occupation;
